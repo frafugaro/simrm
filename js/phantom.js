@@ -1,204 +1,190 @@
-// ==========================================================
+// js/phantom.js - Grafica e Contrasto Diagnostico 3T
+
 // 1. DATABASE TISSUTALE (Siemens Vida 3T)
-// ==========================================================
 const tissueDatabase = {
     abdomen: {
-        fat: { t1: 250, t2: 70, pd: 1.0, isFat: true, isSolid: false },
-        liver: { t1: 810, t2: 45, pd: 0.75, isFat: false, isSolid: true },
-        spleen: { t1: 1100, t2: 80, pd: 0.85, isFat: false, isSolid: true },
-        kidney_cortex: { t1: 1150, t2: 90, pd: 0.85, isFat: false, isSolid: true },
-        kidney_medulla: { t1: 1500, t2: 140, pd: 0.90, isFat: false, isSolid: true },
-        fluids: { t1: 4000, t2: 2000, pd: 1.0, isFat: false, isSolid: false },
-        muscle: { t1: 900, t2: 50, pd: 0.75, isFat: false, isSolid: true },
-        spine: { t1: 300, t2: 0.5, pd: 0.1, isFat: false, isSolid: false }
+        fat: { t1: 250, t2: 70, pd: 1.0, isFat: true },
+        liver: { t1: 810, t2: 45, pd: 0.75, isFat: false },
+        spleen: { t1: 1100, t2: 80, pd: 0.85, isFat: false },
+        kidney: { t1: 1150, t2: 90, pd: 0.85, isFat: false },
+        muscle: { t1: 900, t2: 50, pd: 0.75, isFat: false },
+        spine: { t1: 300, t2: 0.5, pd: 0.1, isFat: false }
     },
     pelvis: {
-        prostate_pz: { t1: 1200, t2: 150, pd: 0.90, isFat: false, isSolid: true },
-        prostate_tz: { t1: 1100, t2: 80, pd: 0.80, isFat: false, isSolid: true },
-        muscle: { t1: 900, t2: 50, pd: 0.75, isFat: false, isSolid: true },
-        bone: { t1: 300, t2: 0.5, pd: 0.10, isFat: false, isSolid: false },
-        bladder: { t1: 4000, t2: 2000, pd: 1.0, isFat: false, isSolid: false },
-        fat: { t1: 250, t2: 70, pd: 1.0, isFat: true, isSolid: false },
-        rectum: { t1: 800, t2: 50, pd: 0.50, isFat: false, isSolid: true }
+        fat: { t1: 250, t2: 70, pd: 1.0, isFat: true },
+        muscle: { t1: 900, t2: 50, pd: 0.75, isFat: false },
+        prostate_pz: { t1: 1200, t2: 150, pd: 0.90, isFat: false },
+        prostate_tz: { t1: 1100, t2: 80, pd: 0.80, isFat: false },
+        bladder: { t1: 4000, t2: 2000, pd: 1.0, isFat: false },
+        rectum: { t1: 800, t2: 50, pd: 0.50, isFat: false },
+        bone: { t1: 300, t2: 0.5, pd: 0.10, isFat: false }
     },
     thorax: {
-        fat: { t1: 250, t2: 70, pd: 1.0, isFat: true, isSolid: false },
-        muscle: { t1: 900, t2: 50, pd: 0.75, isFat: false, isSolid: true },
-        lung: { t1: 1200, t2: 30, pd: 0.20, isFat: false, isSolid: true },
-        heart: { t1: 900, t2: 50, pd: 0.80, isFat: false, isSolid: true },
-        spine: { t1: 300, t2: 0.5, pd: 0.10, isFat: false, isSolid: false }
+        fat: { t1: 250, t2: 70, pd: 1.0, isFat: true },
+        muscle: { t1: 900, t2: 50, pd: 0.75, isFat: false },
+        lung: { t1: 1200, t2: 30, pd: 0.20, isFat: false },
+        heart: { t1: 900, t2: 50, pd: 0.80, isFat: false }
     },
     head: {
-        gm: { t1: 1300, t2: 110, pd: 0.85, isFat: false, isSolid: true },
-        wm: { t1: 850, t2: 80, pd: 0.70, isFat: false, isSolid: true },
-        csf: { t1: 4000, t2: 2000, pd: 1.0, isFat: false, isSolid: false },
-        fat: { t1: 250, t2: 70, pd: 1.0, isFat: true, isSolid: false },
-        bone: { t1: 300, t2: 0.5, pd: 0.10, isFat: false, isSolid: false }
+        fat: { t1: 250, t2: 70, pd: 1.0, isFat: true },
+        gm: { t1: 1300, t2: 110, pd: 0.85, isFat: false },
+        wm: { t1: 850, t2: 80, pd: 0.70, isFat: false },
+        csf: { t1: 4000, t2: 2000, pd: 1.0, isFat: false },
+        bone: { t1: 300, t2: 0.5, pd: 0.10, isFat: false }
     }
 };
 
-// ==========================================================
-// 2. LOGICA DI NORMALIZZAZIONE E CONTRASTO (Bloch)
-// ==========================================================
-function signalToColor(signal, isSolidTissue) {
-    // Guadagno dinamico: eleva il segnale di base per evitare parenchimi troppo neri
-    const gain = 4.0; 
-    let gray = Math.round(signal * gain * 255);
+// 2. MAPPATURA SCALA DI GRIGI CON GUADAGNO (Gain: 5.0)
+function mapSignalToGrayscale(S) {
+    const diagnosticGain = 5.0;
+    const S_g = S * diagnosticGain; 
     
-    // Offset di salvataggio diagnostico (assicura persistenza visiva parenchimi in T2/T1)
-    if (isSolidTissue && signal > 0.02) {
-        gray = Math.max(45, gray);
-    }
-    
-    // Clamping dei valori a range validi RGB
-    gray = Math.min(255, Math.max(0, gray));
-    return `rgb(${gray}, ${gray}, ${gray})`;
+    // Threshold clinico per non azzerare i parenchimi
+    if (S_g < 0.05) return '#0a0a0a'; // L0: Nero assoluto (Osso, Aria, FatSat)
+    if (S_g < 0.25) return '#3c3c3c'; // L1: Grigio Scuro (Fegato T2)
+    if (S_g < 0.50) return '#787878'; // L2: Grigio Medio
+    if (S_g < 0.75) return '#bebebe'; // L3: Grigio Chiaro (Grasso T2)
+    return '#f5f5f5';                 // L4: Bianco iperintenso (Liquidi T2 / Grasso T1)
 }
 
-window.getSignalIntensity = function(tissue) {
-    const s = window.state;
-    
-    // Sostituzione segnale su Fat/Water Sat
-    if (s.saturation === 'Fat Sat' && tissue.isFat) return signalToColor(0, false);
-    if (s.saturation === 'Water Sat' && !tissue.isFat) return signalToColor(0, false);
+function getSignalIntensity(tissue, TR, TE, saturation) {
+    if (saturation === 'Fat Sat' && tissue.isFat) return mapSignalToGrayscale(0);
+    if (saturation === 'Water Sat' && !tissue.isFat) return mapSignalToGrayscale(0);
 
-    const TR = Math.max(1, s.tr);
-    const TE = Math.max(1, s.te);
-
-    // Formula di Bloch - Spin Echo
+    // Formula di Bloch (Spin Echo)
     const signal = tissue.pd * (1 - Math.exp(-TR / tissue.t1)) * Math.exp(-TE / tissue.t2);
-    
-    return signalToColor(signal, tissue.isSolid);
-};
-
-// ==========================================================
-// 3. FUNZIONI HELPER DI DISEGNO VETTORIALE
-// ==========================================================
-function drawPath(d, fill, id, className = "") {
-    return `<path id="${id}" d="${d}" fill="${fill}" class="${className}" />`;
+    return mapSignalToGrayscale(signal);
 }
 
-function drawEllipse(cx, cy, rx, ry, fill, id, transform = "", className = "") {
-    return `<ellipse id="${id}" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" transform="${transform}" class="${className}" />`;
-}
-
-function drawCircle(cx, cy, r, fill, id, className = "") {
-    return `<circle id="${id}" cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" class="${className}" />`;
-}
-
-// ==========================================================
-// 4. RENDERING E SINCRONIZZAZIONE MODULARE
-// ==========================================================
-window.renderPhantom = function(phys) {
-    // Inizializza regione predefinita se mancante
-    window.state.region = window.state.region || 'abdomen';
-    const s = window.state;
-    const region = s.region;
-
-    // Definizioni Filtri
-    const defs = `<defs>
-        <filter id="mri-noise"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 1 0" /></filter>
-        <mask id="gfactor-mask">
-            <radialGradient id="gfactor-grad" cx="50%" cy="50%" r="45%">
-                <stop offset="0%" stop-color="white" stop-opacity="1" />
-                <stop offset="100%" stop-color="white" stop-opacity="0" />
-            </radialGradient>
-            <rect x="0" y="0" width="200" height="200" fill="url(#gfactor-grad)" />
-        </mask>
-        <filter id="texture-parenchyma"><feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="2" result="noise"/><feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.2 0" in2="SourceGraphic" operator="in"/></filter>
-    </defs>`;
-
-    let svgContent = '';
-
-    // ==========================================================
-    // ANATOMIA: ADDOME (Radiological View)
-    // ==========================================================
-    if (region === 'abdomen') {
-        const cFat = getSignalIntensity(tissueDatabase.abdomen.fat);
-        const cMuscle = getSignalIntensity(tissueDatabase.abdomen.muscle);
-        const cLiver = getSignalIntensity(tissueDatabase.abdomen.liver);
-        const cSpleen = getSignalIntensity(tissueDatabase.abdomen.spleen);
-        const cKCor = getSignalIntensity(tissueDatabase.abdomen.kidney_cortex);
-        const cKMed = getSignalIntensity(tissueDatabase.abdomen.kidney_medulla);
-        const cSpine = getSignalIntensity(tissueDatabase.abdomen.spine);
-
-        svgContent = `
-            <g id="ph-group-abdomen-axial">
-                ${drawEllipse(100, 100, 95, 75, cFat, "ph-abd-fat", "", "transition-colors duration-300")}
-                ${drawEllipse(100, 100, 88, 68, cMuscle, "ph-abd-muscle", "", "transition-colors duration-300 transform-water")}
-                
-                <!-- Fegato: Path organico a Destra paziente (Sinistra schermo / SVG) -->
-                ${drawPath("M 15 100 C 15 40, 75 30, 105 40 C 125 45, 130 65, 115 85 C 105 100, 85 130, 45 135 C 20 138, 15 120, 15 100 Z", cLiver, "ph-abd-liver", "transition-colors duration-300 transform-water texture-parenchyma")}
-                
-                <!-- Milza: Ellisse ruotata a Sinistra paziente (Destra schermo / SVG) -->
-                ${drawEllipse(165, 75, 18, 35, cSpleen, "ph-abd-spleen", "rotate(30 165 75)", "transition-colors duration-300 transform-water texture-parenchyma")}
-                
-                <!-- Reni: Ingranditi e definiti Corticale/Midollare -->
-                <g class="transform-water">
-                    <!-- Rene Dx (SVG sx) -->
-                    ${drawEllipse(45, 135, 18, 25, cKCor, "ph-abd-kidney-r", "rotate(-25 45 135)", "transition-colors duration-300")}
-                    ${drawEllipse(47, 133, 10, 15, cKMed, "ph-abd-kidney-r-med", "rotate(-25 47 133)", "transition-colors duration-300")}
-                    <!-- Rene Sx (SVG dx) -->
-                    ${drawEllipse(155, 135, 18, 25, cKCor, "ph-abd-kidney-l", "rotate(25 155 135)", "transition-colors duration-300")}
-                    ${drawEllipse(153, 133, 10, 15, cKMed, "ph-abd-kidney-l-med", "rotate(25 153 133)", "transition-colors duration-300")}
-                </g>
-                
-                <!-- Colonna -->
-                ${drawCircle(100, 150, 12, cSpine, "ph-abd-spine", "transition-colors duration-300 transform-water")}
-            </g>
-        `;
-    } 
-    // Fallback visivi temporanei per salvaguardare switch su altre regioni
-    else {
-        const cFat = getSignalIntensity(tissueDatabase[region]?.fat || tissueDatabase.abdomen.fat);
-        const cMuscle = getSignalIntensity(tissueDatabase[region]?.muscle || tissueDatabase.abdomen.muscle);
-        svgContent = `
-            <g id="ph-group-generic-axial">
-                ${drawEllipse(100, 100, 95, 75, cFat, "ph-gen-fat", "", "transition-colors duration-300")}
-                ${drawEllipse(100, 100, 85, 65, cMuscle, "ph-gen-muscle", "", "transition-colors duration-300 transform-water")}
-            </g>
-        `;
-    }
-
-    // Costruzione Finale SVG nel wrapper
-    const wrapper = document.getElementById('phantom-wrapper');
-    if (wrapper) {
-        wrapper.innerHTML = `
-        <svg viewBox="0 0 200 200" class="w-full h-full preserve-3d">
-            ${defs}
-            ${svgContent}
-            <!-- Overlay Rumore (calcolato su phys) -->
-            <rect id="ph-noise" x="0" y="0" width="200" height="200" filter="url(#mri-noise)" opacity="0" style="mix-blend-mode: screen; pointer-events: none; transition: opacity 0.3s;" />
-            <rect id="ph-noise-gfactor" x="0" y="0" width="200" height="200" filter="url(#mri-noise)" mask="url(#gfactor-mask)" opacity="0" style="mix-blend-mode: screen; pointer-events: none; transition: opacity 0.3s;" />
-        </svg>`;
-    }
-
-    // Applicazione Artefatti e Parametri Fisici
-    if (phys) {
-        let baseNoiseOpacity = Math.max(0, (1.0 - (phys.snrFinal || 1.0)) * 0.3);
-        let gFactorOpacity = (s.accelType === 'GRAPPA' && s.accelR > 2.0) ? (s.accelR - 2.0) * 0.15 * s.gFactor : 0;
+// 3. INIEZIONE DINAMICA SVG SE MANCANTE
+function injectSVG() {
+    return `
+    <svg viewBox="0 0 200 200" class="w-full h-full preserve-3d">
+        <defs>
+            <filter id="mri-noise"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 1 0" /></filter>
+        </defs>
         
-        const noiseEl = document.getElementById('ph-noise');
-        const gNoiseEl = document.getElementById('ph-noise-gfactor');
-        if(noiseEl) noiseEl.setAttribute('opacity', baseNoiseOpacity);
-        if(gNoiseEl) gNoiseEl.setAttribute('opacity', gFactorOpacity);
+        <!-- ABDOMEN AXIAL -->
+        <g id="ph-group-abdomen" class="hidden">
+            <ellipse id="ph-abd-fat" cx="100" cy="100" rx="95" ry="75" />
+            <ellipse id="ph-abd-muscle" cx="100" cy="100" rx="88" ry="68" class="transform-water" />
+            <path id="ph-abd-liver" d="M 15 100 C 15 45, 75 35, 105 40 C 120 42, 125 55, 115 75 C 105 95, 85 130, 45 135 C 20 138, 15 120, 15 100 Z" class="transform-water" />
+            <path id="ph-abd-spleen" d="M 150 55 C 175 60, 185 85, 175 105 C 165 125, 145 115, 140 90 C 135 65, 140 50, 150 55 Z" class="transform-water" />
+            <g class="transform-water">
+                <ellipse id="ph-abd-kidney-r" cx="50" cy="125" rx="16" ry="22" transform="rotate(-25 50 125)" />
+                <ellipse id="ph-abd-kidney-l" cx="150" cy="125" rx="16" ry="22" transform="rotate(25 150 125)" />
+            </g>
+            <circle id="ph-abd-spine" cx="100" cy="150" r="12" class="transform-water" />
+        </g>
 
+        <!-- PELVIS AXIAL -->
+        <g id="ph-group-pelvis" class="hidden">
+            <path id="ph-pel-fat" d="M 20 100 C 20 20, 180 20, 180 100 C 180 180, 20 180, 20 100 Z" />
+            <path id="ph-pel-muscle" d="M 30 120 Q 50 160 100 160 Q 150 160 170 120 L 150 100 Q 100 130 50 100 Z" class="transform-water" />
+            <circle id="ph-pel-bone-l" cx="40" cy="110" r="24" class="transform-water" />
+            <circle id="ph-pel-bone-r" cx="160" cy="110" r="24" class="transform-water" />
+            <path id="ph-pel-rectum" d="M 85 140 C 85 130, 115 130, 115 140 C 115 155, 85 155, 85 140 Z" class="transform-water" />
+            <path id="ph-pel-bladder" d="M 70 55 C 70 35, 130 35, 130 55 C 135 75, 120 90, 100 90 C 80 90, 65 75, 70 55 Z" class="transform-water" />
+            <path id="ph-pel-pz" d="M 80 105 C 80 90, 120 90, 120 105 C 125 125, 115 130, 100 130 C 85 130, 75 125, 80 105 Z" class="transform-water" />
+            <ellipse id="ph-pel-tz" cx="100" cy="108" rx="12" ry="8" class="transform-water" />
+        </g>
+
+        <!-- HEAD AXIAL -->
+        <g id="ph-group-head" class="hidden">
+            <ellipse id="ph-hd-fat" cx="100" cy="100" rx="75" ry="90" />
+            <ellipse id="ph-hd-bone" cx="100" cy="100" rx="70" ry="85" class="transform-water" />
+            <path id="ph-hd-gm" d="M 40 100 C 40 65, 68 28, 100 28 C 132 28, 160 65, 160 100 C 160 135, 132 168, 100 168 C 68 168, 40 135, 40 100 Z" class="transform-water" />
+            <path id="ph-hd-wm" d="M 50 100 C 50 75, 75 45, 100 45 C 125 45, 150 75, 150 100 C 150 125, 125 155, 100 155 C 75 155, 50 125, 50 100 Z" class="transform-water" />
+            <path id="ph-hd-csf" d="M 90 90 Q 100 50 110 90 Q 120 120 100 130 Q 80 120 90 90 Z" class="transform-water" />
+        </g>
+
+        <rect id="ph-noise" x="0" y="0" width="200" height="200" filter="url(#mri-noise)" opacity="0" style="mix-blend-mode: screen; pointer-events: none; transition: opacity 0.3s;" />
+    </svg>`;
+}
+
+// 4. MAIN RENDER FUNCTION (Chiamata da physics.js)
+window.renderPhantom = function(snrFinal) {
+    const s = window.state || {};
+    const region = s.region || 'abdomen';
+    const TR = Math.max(1, parseFloat(s.tr) || 2200);
+    const TE = Math.max(1, parseFloat(s.te) || 105);
+    const saturation = s.saturation || 'Nessuna';
+
+    // A. Controlla e Inietta SVG se il contenitore è vuoto o mancano gli ID essenziali
+    const wrapper = document.getElementById('phantom-wrapper') || document.getElementById('phantom-container');
+    if (wrapper) {
+        if (wrapper.innerHTML.trim() === '' || !document.getElementById('ph-noise')) {
+            wrapper.innerHTML = injectSVG();
+        }
+    }
+
+    // B. Applica i colori calcolati
+    const setFill = (id, tissueCode, anatRegion) => {
+        const el = document.getElementById(id);
+        if(el && tissueDatabase[anatRegion] && tissueDatabase[anatRegion][tissueCode]) {
+            el.setAttribute('fill', getSignalIntensity(tissueDatabase[anatRegion][tissueCode], TR, TE, saturation));
+            el.style.transition = "fill 0.4s ease-in-out";
+        }
+    };
+
+    // Mapping Addome
+    setFill('ph-abd-fat', 'fat', 'abdomen');
+    setFill('ph-abd-muscle', 'muscle', 'abdomen');
+    setFill('ph-abd-liver', 'liver', 'abdomen');
+    setFill('ph-abd-spleen', 'spleen', 'abdomen');
+    setFill('ph-abd-kidney-r', 'kidney', 'abdomen');
+    setFill('ph-abd-kidney-l', 'kidney', 'abdomen');
+    setFill('ph-abd-spine', 'spine', 'abdomen');
+
+    // Mapping Pelvi
+    setFill('ph-pel-fat', 'fat', 'pelvis');
+    setFill('ph-pel-muscle', 'muscle', 'pelvis');
+    setFill('ph-pel-pz', 'prostate_pz', 'pelvis');
+    setFill('ph-pel-tz', 'prostate_tz', 'pelvis');
+    setFill('ph-pel-bladder', 'bladder', 'pelvis');
+    setFill('ph-pel-rectum', 'rectum', 'pelvis');
+    setFill('ph-pel-bone-l', 'bone', 'pelvis');
+    setFill('ph-pel-bone-r', 'bone', 'pelvis');
+
+    // Mapping Cranio
+    setFill('ph-hd-fat', 'fat', 'head');
+    setFill('ph-hd-bone', 'bone', 'head');
+    setFill('ph-hd-gm', 'gm', 'head');
+    setFill('ph-hd-wm', 'wm', 'head');
+    setFill('ph-hd-csf', 'csf', 'head');
+
+    // C. Mostra solo la regione attiva
+    document.querySelectorAll('g[id^="ph-group-"]').forEach(el => el.classList.add('hidden'));
+    const activeGroup = document.getElementById(`ph-group-${region}`);
+    if(activeGroup) activeGroup.classList.remove('hidden');
+
+    // D. Applica Noise in base a SNR Final
+    const noiseRect = document.getElementById('ph-noise');
+    if (noiseRect) {
+        let baseNoiseOpacity = Math.max(0, (1.0 - (snrFinal || 1.0)) * 0.3);
+        noiseRect.setAttribute('opacity', baseNoiseOpacity);
+    }
+
+    // E. Effetto Compressed Sensing (Blur / Sharpening)
+    if (wrapper) {
         let currentFilter = 'grayscale(100%)';
         if (s.accelType === 'CS') {
-            const blurAmount = (s.csFactor - 1) * 0.3; 
+            const blurAmount = (Math.max(1, parseFloat(s.csFactor)) - 1) * 0.3;
             currentFilter += ` blur(${blurAmount}px) contrast(110%)`;
         }
-        if (wrapper) wrapper.style.filter = currentFilter;
-
-        let shiftPx = 0;
-        let dropShadow = 'none';
-        if (phys.bwHzPx < 100) { shiftPx = 3; dropShadow = 'drop-shadow(-3px 0px 0px rgba(0,0,0,1))'; }
-        else if (phys.bwHzPx <= 250) { shiftPx = 1; dropShadow = 'drop-shadow(-1px 0px 0px rgba(0,0,0,0.8))'; }
-        
-        document.querySelectorAll('.transform-water').forEach(el => {
-            el.style.transform = `translateX(${shiftPx}px)`;
-            el.style.filter = shiftPx > 0 ? dropShadow : '';
-            el.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), filter 0.4s';
-        });
+        wrapper.style.filter = currentFilter;
     }
+
+    // F. Artefatto da Chemical Shift (Shift geometrico orizzontale dei tessuti ricchi d'acqua)
+    const bw = Math.max(1, parseFloat(s.bw) || 521);
+    const N_y = Math.max(1, Math.round(parseFloat(s.baseRes || 320) * (parseFloat(s.fovPhasePct || 100) / 100)));
+    const bwHzPx = bw / N_y;
+    
+    let shiftPx = 0;
+    if (bwHzPx < 100) shiftPx = 3; 
+    else if (bwHzPx <= 250) shiftPx = 1; 
+    
+    document.querySelectorAll('.transform-water').forEach(el => {
+        el.style.transform = `translateX(${shiftPx}px)`;
+    });
 };
