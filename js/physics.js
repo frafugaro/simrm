@@ -4,17 +4,17 @@ window.calculatePhysics = function() {
     // Status
     const is3D = s.dimension === '3D';
     const isCS = s.accelType === 'CS';
-    const effR = isCS ? 1.0 : s.accelR;
+    const effR = isCS ? 1.0 : Math.max(1, s.accelR); // Previeni fattore di accelerazione = 0
 
     // Effective Matrices
-    const N_x = s.baseRes;
-    const N_y = Math.round(s.baseRes * (s.fovPhasePct / 100) * (s.phaseResPct / 100));
+    const N_x = Math.max(1, s.baseRes); // Protezione divisione per 0
+    const N_y = Math.max(1, Math.round(N_x * (s.fovPhasePct / 100) * (s.phaseResPct / 100)));
     const actualSliceOS = is3D ? s.sliceOS : 0;
     const actualSlicePartial = is3D ? s.slicePartial : 100;
     const actualSliceResPct = is3D ? s.sliceResPct : 100;
-    let N_z = is3D ? Math.round(s.slices * (actualSliceResPct / 100)) : 1;
+    let N_z = is3D ? Math.max(1, Math.round(s.slices * (actualSliceResPct / 100))) : 1;
 
-    // Voxel Resolution Calculations
+    // Voxel Resolution
     const dx = s.fovRead / N_x;
     let dy = (s.fovRead * (s.fovPhasePct / 100)) / N_y;
     if (s.fovPhasePct === 100 && s.phaseResPct === 100) dy = dx; 
@@ -44,7 +44,7 @@ window.calculatePhysics = function() {
     let displayedShots = 0;
     let totalLines = 0;
 
-    const turbo = Math.max(1, s.turboFactor); // Prevent div by 0
+    const turbo = Math.max(1, s.turboFactor); // Protezione divisione
 
     if (is3D) {
         const effNz = N_z * (1 + actualSliceOS / 100) * (actualSlicePartial / 100);
@@ -60,51 +60,54 @@ window.calculatePhysics = function() {
     }
 
     if (isCS) {
-        taSeconds /= s.csFactor;
-        displayedShots /= s.csFactor;
+        const csF = Math.max(1, s.csFactor);
+        taSeconds /= csF;
+        displayedShots /= csF;
     }
 
     // SAR Calculation
-    const bmi = s.weight / Math.pow(s.height/100, 2);
-    const trSec = Math.max(0.1, s.tr / 1000);
+    const validHeight = Math.max(1, s.height);
+    const bmi = s.weight / Math.pow(validHeight/100, 2);
+    const trSec = Math.max(0.01, s.tr / 1000);
     const flipAngleFactor = Math.pow(s.flipAngle / 180, 2);
     const sar = (0.002 * turbo * bmi / trSec) * flipAngleFactor;
 
-    // Base SNR
-    const bwHzPx = s.bw / Math.max(1, N_y); 
-    const bwRoot = Math.sqrt(521 / s.bw); 
-    const t2Decay = Math.exp(-s.te / 85);
+    // Base SNR Formula (Integrazione della fisica dei parametri base)
+    const bwHzPx = Math.max(1, s.bw) / N_y; 
+    const bwRoot = Math.sqrt(521 / Math.max(1, s.bw)); 
+    const t2Decay = Math.exp(-s.te / 85); // Approssimazione generica per abbattere SNR base a TE lunghi
     const acqTerm = is3D ? (s.nex * N_y * N_z) / 14500 : (s.nex * N_y) / 14500;
     
     let snrBase = (V_voxel / 0.64) * Math.sqrt(acqTerm) * bwRoot * t2Decay * 3.5;
 
     // Chemical Shift / BW constraints on SNR
     let bwMultiplier = 1.0;
-    if (bwHzPx < 100) bwMultiplier = 1.15; 
-    else if (bwHzPx > 250) bwMultiplier = 0.60; 
+    if (bwHzPx < 100) bwMultiplier = 1.15; // SNR gain ma shift artifact elevato
+    else if (bwHzPx > 250) bwMultiplier = 0.60; // SNR loss a BW alte
     let snrFinal = snrBase * bwMultiplier;
 
     // Acceleration g-factor penalties
     let g_eff = s.gFactor;
-    if (s.accelType === 'CAIPIRINHA') g_eff = Math.max(1.0, s.gFactor - 0.3);
+    if (s.accelType === 'CAIPIRINHA') g_eff = Math.max(1.0, s.gFactor - 0.3); // CAIPIRINHA distribuisce meglio l'aliasing
     else if (s.accelType === 'GRAPPA') g_eff = s.gFactor;
 
     if (isCS) {
-        let samplingRate = 1.0 / s.csFactor;
-        let denoisingBoost = Math.sqrt(s.csFactor) * 0.9; 
+        let samplingRate = 1.0 / Math.max(1, s.csFactor);
+        let denoisingBoost = Math.sqrt(Math.max(1, s.csFactor)) * 0.9; 
         snrFinal = snrFinal * Math.sqrt(samplingRate) * denoisingBoost;
     } else {
         snrFinal = snrFinal * (1 / (g_eff * Math.sqrt(effR)));
     }
 
+    // Export sicuro senza NaN
     return {
-        taSeconds,
-        displayedShots,
-        sar,
-        v_dx, v_dy, v_dz,
+        taSeconds: taSeconds || 0,
+        displayedShots: displayedShots || 0,
+        sar: sar || 0,
+        v_dx: v_dx || 0, v_dy: v_dy || 0, v_dz: v_dz || 0,
         isIsotropic,
-        snrBase,
-        snrFinal,
-        bwHzPx
+        snrBase: snrBase || 0,
+        snrFinal: snrFinal || 0,
+        bwHzPx: bwHzPx || 0
     };
 };
