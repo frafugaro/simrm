@@ -1,69 +1,110 @@
-// Motore Fisico-Matematico per la simulazione MR
-function formatTime(seconds) {
-    if(!isFinite(seconds) || seconds < 0) return "0:00";
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${s.toString().padStart(2, '0')}`;
-}
-
-function calculatePhysics() {
+window.calculatePhysics = function() {
     const s = window.state;
     
-    // 1. Matrice Effettiva
-    const Ny_eff = s.Nx * (s.FOV_Phase / 100) * (s.Phase_Res / 100) * (1 + s.Phase_OS / 100) * (s.Phase_Partial / 100);
-    const is3D = s.Slabs > 0;
-    const Nz_eff = is3D ? (s.Slices * s.Slabs) * (1 + s.Slice_OS / 100) * (s.Slice_Partial / 100) : 1;
+    // Status
+    const is3D = s.dimension === '3D';
+    const isCS = s.accelType === 'CS';
+    const effR = isCS ? 1.0 : s.accelR;
+
+    // Effective Matrices
+    const N_x = s.baseRes;
+    const N_y = Math.round(s.baseRes * (s.fovPhasePct / 100) * (s.phaseResPct / 100));
+    const actualSliceOS = is3D ? s.sliceOS : 0;
+    const actualSlicePartial = is3D ? s.slicePartial : 100;
+    const actualSliceResPct = is3D ? s.sliceResPct : 100;
+    let N_z = is3D ? Math.round(s.slices * (actualSliceResPct / 100)) : 1;
+
+    // Voxel Resolution Calculations
+    const dx = s.fovRead / N_x;
+    let dy = (s.fovRead * (s.fovPhasePct / 100)) / N_y;
+    if (s.fovPhasePct === 100 && s.phaseResPct === 100) dy = dx; 
     
-    // 2. Fattore di Accelerazione (R)
-    let R = 1;
-    if (s.Accel_Mode === 'GRAPPA' || s.Accel_Mode === 'CAIPIRINHA') {
-        R = s.Accel_PE * s.Accel_3D;
-    } else if (s.Accel_Mode === 'CS') {
-        R = s.CS_Factor;
-    }
-
-    // Protezione divisione per zero
-    const ETL = Math.max(1, s.Turbo_Factor);
-    const validR = Math.max(1, R);
-
-    // 3. Tempo di Acquisizione (TA) in secondi
-    let TA = 0;
+    let dz = s.sliceThick;
     if (is3D) {
-        TA = (Ny_eff * Nz_eff * s.NEX * s.TR) / (ETL * validR * 1000);
+        const slabThickness = s.slices * s.sliceThick;
+        dz = slabThickness / N_z;
+    }
+
+    // Interpolation handling
+    const v_dx = s.interp == 1 ? dx/2 : dx;
+    const v_dy = s.interp == 1 ? dy/2 : dy;
+    const v_dz = (s.interp == 1 && is3D) ? dz/2 : dz;
+    const V_voxel = dx * dy * dz;
+
+    const maxDim = Math.max(v_dx, v_dy, v_dz);
+    const minDim = Math.min(v_dx, v_dy, v_dz);
+    const isIsotropic = (maxDim - minDim) <= 0.01;
+
+    // Acquisition Time (TA)
+    const phaseOS_factor = (1 + s.phaseOS / 100);
+    const phasePartial_factor = (s.phasePartial / 100);
+    const effNy = N_y * phaseOS_factor * phasePartial_factor;
+    
+    let taSeconds = 0;
+    let displayedShots = 0;
+    let totalLines = 0;
+
+    const turbo = Math.max(1, s.turboFactor); // Prevent div by 0
+
+    if (is3D) {
+        const effNz = N_z * (1 + actualSliceOS / 100) * (actualSlicePartial / 100);
+        totalLines = effNy * effNz;
+        taSeconds = (totalLines * s.nex * s.tr) / (turbo * effR * 1000);
+        displayedShots = totalLines / (turbo * effR);
     } else {
-        // Calcolo dei pacchetti multi-slice per 2D
-        const sliceTime = (s.Echo_Spacing * ETL + 50);
-        const slicesPerTR = Math.max(1, s.TR / sliceTime);
-        const packages = Math.ceil(s.Slices / slicesPerTR);
-        TA = (Ny_eff * s.NEX * s.TR * packages * s.Concatenations) / (ETL * validR * 1000);
+        totalLines = effNy * s.slices;
+        const sliceTime = (s.echoSpacing * turbo + 10);
+        const fettePerTR = Math.max(1, Math.floor(s.tr / sliceTime));
+        taSeconds = (totalLines * s.nex) / (turbo * effR * fettePerTR) * (s.tr / 1000) * s.conc;
+        displayedShots = totalLines / (turbo * effR);
     }
 
-    // 4. Volume Voxel (mm^3)
-    const dx = s.FOV_Read / s.Nx;
-    const dy = (s.FOV_Read * (s.FOV_Phase / 100)) / (s.Nx * (s.Phase_Res / 100));
-    const Voxel_Volume = dx * dy * s.Slice_Thick;
-
-    // 5. Calcolo SNR (Signal to Noise Ratio)
-    let SNR_base = (Voxel_Volume / 0.64) * Math.sqrt((Ny_eff * Nz_eff * s.NEX) / (s.BW * validR)) * Math.exp(-s.TEeff / 85);
-    
-    // Calcolo g-factor in base alla tecnica di accelerazione
-    let g_factor = 1.0;
-    if (s.Accel_Mode === 'GRAPPA') g_factor = 1 + (validR - 1) * 0.15;
-    if (s.Accel_Mode === 'CAIPIRINHA') g_factor = 1 + (validR - 1) * 0.05;
-    
-    let SNR_final = SNR_base / g_factor;
-
-    // Modifica CS per Compressed Sensing
-    if (s.Accel_Mode === 'CS') {
-        SNR_final = SNR_base * (1.2 / Math.sqrt(validR));
+    if (isCS) {
+        taSeconds /= s.csFactor;
+        displayedShots /= s.csFactor;
     }
 
-    // Ritorna i risultati
+    // SAR Calculation
+    const bmi = s.weight / Math.pow(s.height/100, 2);
+    const trSec = Math.max(0.1, s.tr / 1000);
+    const flipAngleFactor = Math.pow(s.flipAngle / 180, 2);
+    const sar = (0.002 * turbo * bmi / trSec) * flipAngleFactor;
+
+    // Base SNR
+    const bwHzPx = s.bw / Math.max(1, N_y); 
+    const bwRoot = Math.sqrt(521 / s.bw); 
+    const t2Decay = Math.exp(-s.te / 85);
+    const acqTerm = is3D ? (s.nex * N_y * N_z) / 14500 : (s.nex * N_y) / 14500;
+    
+    let snrBase = (V_voxel / 0.64) * Math.sqrt(acqTerm) * bwRoot * t2Decay * 3.5;
+
+    // Chemical Shift / BW constraints on SNR
+    let bwMultiplier = 1.0;
+    if (bwHzPx < 100) bwMultiplier = 1.15; 
+    else if (bwHzPx > 250) bwMultiplier = 0.60; 
+    let snrFinal = snrBase * bwMultiplier;
+
+    // Acceleration g-factor penalties
+    let g_eff = s.gFactor;
+    if (s.accelType === 'CAIPIRINHA') g_eff = Math.max(1.0, s.gFactor - 0.3);
+    else if (s.accelType === 'GRAPPA') g_eff = s.gFactor;
+
+    if (isCS) {
+        let samplingRate = 1.0 / s.csFactor;
+        let denoisingBoost = Math.sqrt(s.csFactor) * 0.9; 
+        snrFinal = snrFinal * Math.sqrt(samplingRate) * denoisingBoost;
+    } else {
+        snrFinal = snrFinal * (1 / (g_eff * Math.sqrt(effR)));
+    }
+
     return {
-        Ny_eff: Math.round(Ny_eff),
-        Nz_eff: is3D ? Math.round(Nz_eff) : 1, // Nz è 1 in planare
-        TA_sec: TA,
-        TA_str: formatTime(TA),
-        SNR: SNR_final > 0 ? SNR_final.toFixed(2) : "0.00"
+        taSeconds,
+        displayedShots,
+        sar,
+        v_dx, v_dy, v_dz,
+        isIsotropic,
+        snrBase,
+        snrFinal,
+        bwHzPx
     };
-}
+};
