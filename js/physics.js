@@ -109,22 +109,5 @@ window.calculatePhysics = function() {
         snrBase: snrBase || 0,
         snrFinal: snrFinal || 0,
         bwHzPx: bwHzPx || 0
-    
-    const physResult = {
-        taSeconds: taSeconds || 0,
-        displayedShots: displayedShots || 0,
-        sar: sar || 0,
-        v_dx: v_dx || 0, v_dy: v_dy || 0, v_dz: v_dz || 0,
-        isIsotropic,
-        snrBase: snrBase || 0,
-        snrFinal: snrFinal || 0,
-        bwHzPx: bwHzPx || 0
     };
-
-    // Sincronizzazione Modulare Obbligatoria:
-    if (typeof window.renderPhantom === 'function') {
-        window.renderPhantom(physResult);
-    }
-
-    return physResult;
 };
