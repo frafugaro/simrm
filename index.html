@@ -1,107 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MRI Simulator V4 - Vida 3T</title>
+    <title>Magnetom Vida 3T - Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        .tab-btn.active { background-color: #1e293b; border-left: 4px solid #3b82f6; color: #fff; }
+        .tab-btn.active { background-color: #1e293b; border-left-color: #3b82f6; color: #ffffff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .flash-highlight { animation: flashBlue 1.5s ease-out; }
-        @keyframes flashBlue { 0% { background-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 0 4px #3b82f6; } 100% { background-color: transparent; box-shadow: 0 0 0 0px transparent; } }
+        @keyframes flashBlue { 0% { box-shadow: 0 0 0 4px #3b82f6; background-color: rgba(59, 130, 246, 0.3); } 100% { box-shadow: 0 0 0 0px transparent; background-color: transparent; } }
     </style>
 </head>
-<body class="h-screen w-screen bg-slate-900 text-slate-300 overflow-hidden font-sans text-sm flex flex-col select-none">
+<body class="h-screen bg-slate-900 text-slate-300 font-sans flex flex-col overflow-hidden text-sm select-none">
 
     <!-- Login Overlay -->
-    <div id="login-screen" class="absolute inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center transition-opacity duration-500">
-        <div class="bg-slate-900 p-8 rounded-lg shadow-2xl border border-slate-700 w-96 flex flex-col items-center">
-            <div class="w-12 h-12 bg-blue-600 text-white font-bold flex items-center justify-center rounded-lg text-2xl mb-4">S</div>
-            <h1 class="text-xl font-bold mb-2 text-slate-100">MAGNETOM Vida 3T</h1>
-            <p class="text-xs text-slate-500 mb-6">Clinical Simulator V4</p>
-            <input type="password" id="login-pwd" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-center text-white focus:outline-none focus:border-blue-500 mb-4" placeholder="Enter password...">
-            <button id="login-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded transition uppercase text-xs tracking-wider">Login</button>
-            <p id="login-err" class="text-red-500 text-xs mt-3 hidden">Invalid Password</p>
+    <div id="login-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center transition-opacity duration-500">
+        <div class="bg-slate-900 border border-slate-700 p-8 rounded-lg shadow-2xl flex flex-col items-center gap-4 w-80">
+            <div class="w-12 h-12 bg-blue-600 text-white font-bold flex items-center justify-center rounded-lg text-2xl mb-2">S</div>
+            <h2 class="text-xl font-bold text-slate-100 text-center">syngo.MR Simulator</h2>
+            <input type="password" id="login-pwd" class="w-full bg-slate-950 border border-slate-600 rounded p-2 text-center text-slate-200 focus:border-blue-500 outline-none" placeholder="Password (simulatore)">
+            <button id="login-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded transition-colors uppercase tracking-wider text-xs">Accedi</button>
+            <p id="login-err" class="text-red-400 text-xs hidden mt-2">Password errata!</p>
         </div>
     </div>
 
     <!-- Header -->
-    <header class="h-14 bg-slate-950 border-b border-slate-800 flex items-center justify-between px-4 shrink-0 z-40 relative">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-blue-600 text-white font-bold flex items-center justify-center rounded-sm text-lg">S</div>
+    <header class="bg-slate-950 border-b border-slate-800 p-3 flex justify-between items-center shrink-0 relative z-40">
+        <div class="flex items-center gap-4">
+            <div class="w-7 h-7 bg-blue-600 text-white font-bold flex items-center justify-center rounded-sm">S</div>
             <div>
-                <div class="text-slate-100 font-bold tracking-wide">syngo.MR</div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-widest">Simulator V4</div>
+                <h1 class="text-base font-bold text-slate-100 tracking-wide">MAGNETOM VIDA 3T</h1>
+                <p class="text-xs text-slate-500">Clinical Simulator V4</p>
             </div>
         </div>
-        <div class="relative w-72">
-            <input type="text" id="quick-search" placeholder="Smart Search Parameter..." class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-3 py-1.5 outline-none focus:border-blue-500 placeholder-slate-600">
-            <div id="search-results" class="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-slate-700 rounded shadow-2xl hidden flex-col max-h-64 overflow-y-auto z-50"></div>
+        <div class="relative">
+            <input type="text" id="quick-search" placeholder="Smart Parameter Search..." class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded px-3 py-1.5 outline-none focus:border-blue-500 w-64 placeholder-slate-500">
+            <div id="search-results" class="absolute top-full right-0 mt-1 w-full max-h-64 overflow-y-auto bg-slate-900 border border-slate-700 rounded shadow-2xl hidden flex-col z-50"></div>
         </div>
     </header>
 
     <div class="flex flex-1 overflow-hidden relative z-0">
         <!-- Sidebar -->
-        <nav id="sidebar" class="w-48 bg-slate-950 border-r border-slate-800 flex flex-col py-2 shrink-0">
-            <!-- Tabs verranno generati dinamicamente, Setup in fondo -->
-        </nav>
+        <aside class="w-48 bg-slate-950 border-r border-slate-800 flex flex-col shrink-0 overflow-y-auto" id="sidebar-tabs">
+            <!-- Inject Tab Buttons via JS -->
+        </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden bg-slate-900">
-            
-            <!-- Parameters Area -->
-            <section class="flex-1 bg-slate-800 border border-slate-700 rounded flex flex-col overflow-hidden relative">
-                <div class="p-3 border-b border-slate-700 bg-slate-800/50 z-10">
-                    <h2 id="current-tab-title" class="text-sm font-bold text-blue-400 uppercase tracking-wider">Routine</h2>
-                </div>
-                <div id="params-container" class="flex-1 overflow-y-auto p-4 relative">
-                    <!-- Campi iniettati da main.js -->
-                </div>
-            </section>
+        <main class="flex-1 overflow-y-auto p-4 flex flex-col xl:flex-row gap-4 bg-slate-900">
+            <!-- Params Container -->
+            <div class="flex-1 bg-slate-800 border border-slate-700 rounded-md p-4 relative overflow-y-auto" id="params-container">
+                <!-- Inject Tab Contents via JS -->
+            </div>
 
-            <!-- Viewer & Dashboard -->
-            <section class="w-full lg:w-96 flex flex-col gap-4 shrink-0 overflow-y-auto">
-                <!-- SVG Viewport -->
-                <div class="bg-black border border-slate-700 rounded aspect-square relative flex items-center justify-center overflow-hidden drop-shadow-xl" id="mri-viewport">
-                    <!-- SVG iniettato da phantom.js -->
-                </div>
-
-                <!-- Dashboard Risultati -->
-                <div class="bg-slate-800 border border-slate-700 rounded p-4 grid grid-cols-2 gap-3">
-                    <div class="bg-slate-900 border border-slate-700 p-2 rounded">
-                        <div class="text-[10px] text-slate-500 uppercase">Acq. Time (TA)</div>
-                        <div id="out-ta" class="font-mono text-lg text-slate-200">0:00</div>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-700 p-2 rounded">
-                        <div class="text-[10px] text-slate-500 uppercase">ETL / Shots</div>
-                        <div id="out-etl" class="font-mono text-sm text-slate-200">-</div>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-700 p-2 rounded">
-                        <div class="text-[10px] text-slate-500 uppercase">SAR (W/kg)</div>
-                        <div id="out-sar" class="font-mono text-sm text-slate-200">0.00</div>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-700 p-2 rounded">
-                        <div class="text-[10px] text-slate-500 uppercase">Voxel Res (mm)</div>
-                        <div id="out-res" class="font-mono text-xs text-blue-300">0.0 x 0.0 x 0.0</div>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-700 p-2 rounded">
-                        <div class="text-[10px] text-slate-500 uppercase">SNR Base</div>
-                        <div id="out-snr-base" class="font-mono text-lg text-slate-400">0.00</div>
-                    </div>
-                    <div id="box-snr-final" class="bg-blue-900/20 border border-blue-500 p-2 rounded transition-colors">
-                        <div class="text-[10px] text-blue-300 uppercase">SNR Final</div>
-                        <div id="out-snr-final" class="font-mono text-xl font-bold text-blue-400">0.00</div>
+            <!-- Viewport Container -->
+            <div class="w-full xl:w-96 flex flex-col gap-4 shrink-0">
+                <div class="bg-black border border-slate-700 rounded-md p-4 flex flex-col items-center justify-center relative flex-1 min-h-[300px]">
+                    <span id="phantom-title" class="absolute top-2 left-2 text-[10px] text-slate-500 uppercase tracking-widest z-10">Viewport</span>
+                    <div id="mri-viewport" class="relative w-full aspect-square border border-slate-800 bg-black transition-all duration-300">
+                        <!-- SVG injected here -->
                     </div>
                 </div>
-            </section>
+            </div>
         </main>
     </div>
 
-    <!-- Scripts -->
+    <!-- Dashboard / Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 p-3 shrink-0 relative z-10">
+        <div class="flex flex-wrap md:flex-nowrap gap-2 max-w-full justify-between items-center text-center">
+            <div class="bg-slate-900 border border-slate-700 px-3 py-2 rounded flex-1">
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Acq. Time (TA)</div>
+                <div id="out-ta" class="font-mono text-lg text-slate-200">0:00</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-700 px-3 py-2 rounded flex-1">
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">ETL / Shots</div>
+                <div id="out-etl" class="font-mono text-sm text-slate-200">-</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-700 px-3 py-2 rounded flex-1">
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">SAR (W/kg)</div>
+                <div id="out-sar" class="font-mono text-sm text-slate-200">0.0</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-700 px-3 py-2 rounded flex-[2]">
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1 flex justify-between">
+                    <span>Voxel Res (dx × dy × dz)</span>
+                </div>
+                <div id="out-res" class="font-mono text-sm text-blue-300">0.0 × 0.0 × 0.0 mm</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-700 px-3 py-2 rounded flex-1">
+                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">SNR Base</div>
+                <div id="out-snr-base" class="font-mono text-lg text-slate-400">0.00</div>
+            </div>
+            <div id="box-snr-final" class="border border-blue-500 bg-blue-900/20 px-4 py-2 rounded flex-1 transition-colors relative">
+                <div class="text-[10px] text-blue-300 uppercase tracking-widest mb-1">SNR Final</div>
+                <div id="out-snr-final" class="font-mono text-xl font-bold text-blue-400">0.00</div>
+            </div>
+        </div>
+    </footer>
+
     <script src="js/config.js"></script>
     <script src="js/physics.js"></script>
     <script src="js/phantom.js"></script>
