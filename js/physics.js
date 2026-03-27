@@ -109,9 +109,6 @@ window.calculatePhysics = function() {
         snrBase: snrBase || 0,
         snrFinal: snrFinal || 0,
         bwHzPx: bwHzPx || 0
-    };
-};
-// ... [Alla fine di window.calculatePhysics] ...
     
     const physResult = {
         taSeconds: taSeconds || 0,
