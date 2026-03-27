@@ -1,154 +1,142 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Login Logic
-    const loginBtn = document.getElementById('login-btn');
-    const loginPwd = document.getElementById('login-pwd');
-    
+    // 1. LOGIN LOGIC
     const doLogin = () => {
-        if(loginPwd.value === 'simulatore') {
+        if(document.getElementById('login-pwd').value === 'simulatore') {
             document.getElementById('login-screen').style.opacity = '0';
-            setTimeout(() => document.getElementById('login-screen').style.display = 'none', 500);
-            initUI();
+            setTimeout(() => { document.getElementById('login-screen').style.display = 'none'; buildUI(); }, 500);
         } else {
             document.getElementById('login-err').classList.remove('hidden');
         }
     };
-    loginBtn.addEventListener('click', doLogin);
-    loginPwd.addEventListener('keypress', e => e.key === 'Enter' && doLogin());
+    document.getElementById('login-btn').addEventListener('click', doLogin);
+    document.getElementById('login-pwd').addEventListener('keypress', e => { if(e.key==='Enter') doLogin(); });
 
-    // Generate UI from Config
-    function initUI() {
-        const sidebar = document.getElementById('sidebar-tabs');
-        const container = document.getElementById('parameters-container');
+    // 2. BUILD UI DYNAMICALLY (Eseguito una sola volta)
+    function buildUI() {
+        const sidebar = document.getElementById('sidebar');
+        const container = document.getElementById('params-container');
         
-        let isFirst = true;
-        
-        // Populate inputs that exist in static HTML (like Patient data)
-        document.querySelectorAll('.state-input').forEach(input => {
-            const key = input.dataset.key;
-            if(window.state[key] !== undefined) input.value = window.state[key];
-            
-            input.addEventListener('input', (e) => {
-                let val = e.target.type === 'number' ? parseFloat(e.target.value) : e.target.value;
-                if(isNaN(val) && e.target.type === 'number') val = 0;
-                window.state[key] = val;
-                triggerUpdate();
-            });
-        });
-
-        // Dynamic generation of tabs based on window.uiConfig
-        Object.keys(window.uiConfig).forEach(tabKey => {
-            const tabData = window.uiConfig[tabKey];
-            
-            // Sidebar Button
+        Object.values(window.configUI).forEach((tab, index) => {
+            // Setup Sidebar button
             const btn = document.createElement('button');
-            btn.className = `tab-btn p-3 text-left font-medium border-l-4 border-transparent text-slate-400 hover:bg-slate-800 transition-colors w-full block ${isFirst ? 'active bg-slate-800 border-blue-500 text-white' : ''}`;
-            btn.innerText = tabData.label;
-            btn.dataset.target = tabKey;
-            
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'bg-slate-800', 'border-blue-500', 'text-white'));
-                btn.classList.add('active', 'bg-slate-800', 'border-blue-500', 'text-white');
-                
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.getElementById(`tab-${tabKey}`).classList.add('active');
-            });
+            btn.className = `tab-btn text-left px-4 py-3 text-xs font-medium border-l-4 border-transparent hover:bg-slate-800 transition ${tab.isBottom ? 'mt-auto text-blue-400' : 'text-slate-400'} ${index === 0 ? 'active' : ''}`;
+            btn.innerText = tab.label;
+            btn.onclick = () => window.switchTab(tab.id, btn);
             sidebar.appendChild(btn);
 
-            // Tab Content Box
-            const contentBox = document.createElement('div');
-            contentBox.id = `tab-${tabKey}`;
-            contentBox.className = `tab-content h-full ${isFirst ? 'active' : ''}`;
+            // Setup Content Box
+            const box = document.createElement('div');
+            box.id = `tab-box-${tab.id}`;
+            box.className = `grid grid-cols-2 gap-x-6 gap-y-4 ${index === 0 ? 'block' : 'hidden'}`;
             
-            const grid = document.createElement('div');
-            grid.className = 'grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4';
-
-            tabData.fields.forEach(f => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col gap-1 justify-end';
+            tab.fields.forEach(f => {
+                const wrap = document.createElement('div');
+                wrap.className = "flex flex-col gap-1";
+                const label = `<label class="text-[10px] text-slate-500 uppercase tracking-wider">${f.label}</label>`;
                 
-                wrapper.innerHTML = `<label class="text-[10px] uppercase tracking-wider text-slate-400">${f.label}</label>`;
-                
-                let inputHtml = '';
-                const currentVal = window.state[f.id] !== undefined ? window.state[f.id] : '';
-                
-                if (f.type === 'select') {
-                    inputHtml = `<select id="inp-${f.id}" data-key="${f.id}" class="dyn-input w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-slate-200 outline-none focus:border-blue-500 text-xs">
-                        ${f.options.map(o => `<option value="${o}" ${currentVal == o ? 'selected' : ''}>${o}</option>`).join('')}
+                let input = '';
+                if(f.type === 'button') {
+                    input = `<button onclick="${f.action}" class="w-full bg-slate-700 hover:bg-slate-600 text-blue-400 font-bold py-1 rounded text-xs border border-slate-600">${f.label}</button>`;
+                } else if (f.type === 'select') {
+                    input = `<select id="inp-${tab.id}-${f.key}" data-key="${f.key}" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-slate-200 text-xs outline-none focus:border-blue-500 sync-input">
+                        ${f.options.map(o => `<option value="${o}" ${window.state[f.key] === o ? 'selected' : ''}>${o}</option>`).join('')}
                     </select>`;
                 } else {
-                    inputHtml = `<input type="${f.type}" id="inp-${f.id}" data-key="${f.id}" value="${currentVal}" ${f.step ? `step="${f.step}"` : ''} class="dyn-input w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-slate-200 outline-none focus:border-blue-500 font-mono text-xs">`;
+                    input = `<input type="number" id="inp-${tab.id}-${f.key}" data-key="${f.key}" value="${window.state[f.key]}" step="${f.step}" class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-slate-200 text-xs outline-none focus:border-blue-500 font-mono sync-input">`;
                 }
-                wrapper.innerHTML += inputHtml;
-                grid.appendChild(wrapper);
-            });
-            
-            contentBox.innerHTML = `<h3 class="text-xs font-bold text-blue-500 mb-3 uppercase border-b border-slate-700 pb-1">${tabData.label} Settings</h3>`;
-            contentBox.appendChild(grid);
-            container.appendChild(contentBox);
-            
-            isFirst = false;
-        });
-
-        // Attach listeners to dynamic inputs (Zero innerHTML rebuilds)
-        document.querySelectorAll('.dyn-input').forEach(input => {
-            input.addEventListener('input', (e) => {
-                const key = e.target.dataset.key;
-                let val = e.target.type === 'number' ? parseFloat(e.target.value) : e.target.value;
-                if(isNaN(val) && e.target.type === 'number') val = 0;
                 
-                window.state[key] = val;
-                triggerUpdate();
+                wrap.innerHTML = label + input;
+                box.appendChild(wrap);
+            });
+            container.appendChild(box);
+        });
+
+        // Setup Event Listeners per gli input creati
+        document.querySelectorAll('.sync-input').forEach(el => {
+            el.addEventListener('input', (e) => window.updateState(e.target.dataset.key, e.target.value, e.target.id));
+        });
+
+        window.calculatePhysics();
+    }
+
+    // 3. TAB SWITCHING
+    window.switchTab = function(tabId, btnEl) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        if(btnEl) btnEl.classList.add('active');
+        else { // Se richiamato da search
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                if(b.innerText.toLowerCase() === window.configUI[tabId].label.toLowerCase()) b.classList.add('active');
+            });
+        }
+        
+        document.querySelectorAll('div[id^="tab-box-"]').forEach(box => box.classList.add('hidden'));
+        document.getElementById(`tab-box-${tabId}`).classList.remove('hidden');
+        document.getElementById('current-tab-title').innerText = window.configUI[tabId].label;
+    };
+
+    // 4. SMART SEARCH
+    const searchInput = document.getElementById('quick-search');
+    const searchRes = document.getElementById('search-results');
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        searchRes.innerHTML = '';
+        if(query.length < 2) { searchRes.classList.add('hidden'); return; }
+
+        let matches =[];
+        Object.values(window.configUI).forEach(tab => {
+            tab.fields.forEach(f => {
+                if(f.label && f.label.toLowerCase().includes(query)) {
+                    matches.push({ tabId: tab.id, field: f });
+                }
             });
         });
 
-        triggerUpdate(); // Initial boot
-    }
-
-    // Core Pipeline
-    function triggerUpdate() {
-        // 1. Calculate Math
-        const phys = window.calculatePhysics();
-        
-        // 2. Update Bottom Dashboard DOM exactly by ID
-        const m = Math.floor(phys.taSeconds / 60);
-        const s = Math.round(phys.taSeconds % 60);
-        document.getElementById('out-ta').innerText = `${m}:${s.toString().padStart(2, '0')}`;
-        document.getElementById('out-etl').innerText = `${window.state.turboFactor} / ${Math.ceil(phys.displayedShots)}`;
-        document.getElementById('out-res').innerText = `${phys.v_dx.toFixed(2)} × ${phys.v_dy.toFixed(2)} × ${phys.v_dz.toFixed(2)} mm`;
-        document.getElementById('out-snr-base').innerText = phys.snrBase.toFixed(2);
-        document.getElementById('out-bw-real').innerText = `BW Reale: ${phys.bwHzPx.toFixed(1)} Hz/Px`;
-        
-        // SAR formatting
-        const sarEl = document.getElementById('out-sar');
-        sarEl.innerText = phys.sar.toFixed(2);
-        sarEl.className = phys.sar > 3.2 
-            ? 'font-mono text-sm text-red-400 font-bold border-b border-red-500 animate-pulse' 
-            : 'font-mono text-sm text-slate-200 border-b border-transparent';
-
-        // ISO formatting
-        const isoEl = document.getElementById('out-iso');
-        isoEl.innerText = phys.isIsotropic ? 'ISO ✅' : 'ANISO';
-        isoEl.className = `font-bold text-[10px] ${phys.isIsotropic ? 'text-green-500' : 'text-yellow-600'}`;
-
-        // SNR Final formatting
-        const snrFinalEl = document.getElementById('out-snr-final');
-        const snrBoxEl = document.getElementById('box-snr-final');
-        const alertEl = document.getElementById('alert-banner');
-        
-        snrFinalEl.innerText = phys.snrFinal.toFixed(2);
-        
-        if (phys.snrFinal < 0.8) { 
-            snrBoxEl.className = "border border-red-500 bg-red-900/30 px-4 py-2 rounded flex-1 transition-colors relative";
-            snrFinalEl.className = "font-mono text-xl font-bold text-red-400";
-            alertEl.classList.remove('hidden');
+        if(matches.length > 0) {
+            matches.forEach(m => {
+                const div = document.createElement('div');
+                div.className = "px-3 py-2 text-xs text-slate-300 hover:bg-blue-600 hover:text-white cursor-pointer border-b border-slate-700";
+                div.innerText = `${m.field.label} (${window.configUI[m.tabId].label})`;
+                div.onclick = () => {
+                    searchRes.classList.add('hidden');
+                    searchInput.value = '';
+                    window.switchTab(m.tabId);
+                    const targetId = `inp-${m.tabId}-${m.field.key}`;
+                    setTimeout(() => {
+                        const el = document.getElementById(targetId);
+                        if(el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            el.focus();
+                            el.classList.add('flash-highlight');
+                            setTimeout(() => el.classList.remove('flash-highlight'), 1500);
+                        }
+                    }, 50);
+                };
+                searchRes.appendChild(div);
+            });
+            searchRes.classList.remove('hidden');
+            searchRes.classList.add('flex');
         } else {
-            snrBoxEl.className = "border border-blue-500 bg-blue-900/20 px-4 py-2 rounded flex-1 transition-colors relative";
-            snrFinalEl.className = "font-mono text-xl font-bold text-blue-400";
-            alertEl.classList.add('hidden');
+            searchRes.classList.add('hidden');
         }
+    });
 
-        // 3. Update Visual Phantom
-        window.updatePhantomGraphics(phys);
-    }
+    // 5. GLOBAL STATE UPDATE (Zero innerHTML rebuilds on typing)
+    window.updateState = function(key, value, sourceId) {
+        window.state[key] = value;
+        // Sincronizza input duplicati in altre tab senza disturbare il focus corrente
+        document.querySelectorAll(`[data-key="${key}"]`).forEach(el => {
+            if(el.id !== sourceId) el.value = value;
+        });
+        window.calculatePhysics();
+    };
+
+    // 6. AUTO ISO FEATURE
+    window.setAutoIso = function() {
+        const dx = window.state.fovRead / window.state.nx;
+        window.updateState('sliceThick', parseFloat(dx.toFixed(2)), null);
+        window.updateState('phaseResPct', 100, null);
+        window.updateState('sliceResPct', 100, null);
+    };
 });
