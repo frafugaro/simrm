@@ -43,18 +43,12 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .snap-container {
-            scroll-snap-type: y proximity;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        section {
-            scroll-snap-align: start;
+        .hero-bg {
+            background: radial-gradient(circle at center, #002b4d 0%, #0a0a0a 75%);
         }
         
         /* AI Chat Modal Styles */
-        #ai-modal {
+        #ai-modal, #protocol-modal {
             backdrop-filter: blur(8px);
             transition: opacity 0.3s ease-in-out;
         }
@@ -93,16 +87,12 @@
         </div>
     </nav>
 
-    <!-- Hero Section con Video Background -->
-    <section class="min-h-screen flex flex-col justify-center items-center px-6 relative overflow-hidden bg-black">
-        
-        <!-- Sfondo Video in Loop -->
-        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
-            <source src="REGISTRAZIONE-PACCHETTO.mp4" type="video/mp4">
-        </video>
-        
-        <!-- Overlay Gradient per contrasto testo -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#002b4d]/60 via-[#0a0a0a]/80 to-[#0a0a0a] z-0 pointer-events-none"></div>
+    <!-- Hero Section (Video rimosso) -->
+    <section class="min-h-screen flex flex-col justify-center items-center px-6 relative hero-bg overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full filter blur-[120px]"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900 rounded-full filter blur-[120px]"></div>
+        </div>
 
         <div class="text-center z-10 pt-20" data-aos="fade-up" data-aos-duration="1000">
             <h1 class="text-5xl md:text-7xl font-bold mb-4 siemens-font">
@@ -126,11 +116,11 @@
             <div class="rounded-xl border border-white/10 overflow-hidden shadow-2xl shadow-blue-900/40 bg-black/50 p-2 relative min-h-[300px]">
                 <div id="img-fallback-hero" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0a] text-center p-6 z-0 hidden border border-dashed border-blue-900 rounded-lg m-2">
                     <i data-lucide="image" class="w-10 h-10 text-[#005f9e] mb-3 opacity-50"></i>
-                    <p class="text-white font-bold text-sm tracking-widest uppercase mb-1">Asset Locale Richiesto</p>
-                    <p class="text-gray-500 text-xs max-w-md font-mono">Il rendering di 'routine.png' è bloccato nell'editor. Il nodo img è intatto per il deploy su Vercel.</p>
+                    <p class="text-white font-bold text-sm tracking-widest uppercase mb-1">Asset Locale</p>
+                    <p class="text-gray-500 text-xs max-w-md font-mono">L'immagine 'routine.png' verrà caricata correttamente al deploy su Vercel.</p>
                 </div>
                 <img src="routine.png" 
-                     alt="SIMRM Interface Routine" 
+                     alt="Interfaccia SIMRM Routine" 
                      onerror="this.style.display='none'; document.getElementById('img-fallback-hero').classList.remove('hidden'); document.getElementById('img-fallback-hero').classList.add('flex');"
                      class="w-full rounded-lg shadow-inner relative z-10">
             </div>
@@ -174,22 +164,22 @@
             <div class="relative" data-aos="fade-left">
                 <div class="glass-panel p-8 rounded-xl border border-blue-900/30">
                     <h3 class="text-[#005f9e] font-bold mb-6 uppercase tracking-tighter italic">Rendering & Moduli Anatomici</h3>
-                    <ul class="space-y-4 text-sm">
-                        <li class="flex items-center gap-4 text-gray-300">
+                    <ul class="space-y-4 text-sm text-gray-300">
+                        <li class="flex items-center gap-4">
                             <span class="w-2 h-2 rounded-full bg-[#005f9e] shrink-0"></span>
-                            <span><strong>Encefalo:</strong> Modello primario a 3 compartimenti (WM, GM, CSF).</span>
+                            <span>Encefalo (WM, GM, CSF)</span>
                         </li>
-                        <li class="flex items-center gap-4 text-gray-300">
+                        <li class="flex items-center gap-4">
                             <span class="w-2 h-2 rounded-full bg-[#005f9e] shrink-0"></span>
-                            <span><strong>Addome e Pelvi:</strong> Matrici derivate da algoritmi di conversione DICOM-to-Python.</span>
+                            <span>Addome e Pelvi (DICOM Matrix)</span>
                         </li>
-                        <li class="flex items-center gap-4 text-gray-300">
+                        <li class="flex items-center gap-4">
                             <span class="w-2 h-2 rounded-full bg-[#005f9e] shrink-0"></span>
-                            <span><strong>Modulo Dixon:</strong> Generazione di contrasti In-Phase, Out-Phase, Water e Fat.</span>
+                            <span>Modulo Dixon (In/Out/Water/Fat)</span>
                         </li>
-                        <li class="flex items-center gap-4 text-gray-300">
+                        <li class="flex items-center gap-4">
                             <span class="w-2 h-2 rounded-full bg-[#005f9e] shrink-0"></span>
-                            <span><strong>Saturazione:</strong> Soppressione spettrale indipendente (FatSat) applicabile ai tessuti.</span>
+                            <span>Saturazione spettrale indipendente</span>
                         </li>
                     </ul>
                 </div>
@@ -205,26 +195,26 @@
                 <p class="text-gray-500">Motore di rendering basato su fisica rigorosa</p>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up">
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="layers"></i>
                     </div>
                     <h4 class="text-xl font-bold mb-3">Deep Resolve AI</h4>
-                    <p class="text-sm text-gray-500">Algoritmo post-processing che simula i kernel di ricostruzione IA. GAIN incrementa artificialmente l'SNR, mentre SHARP applica routine di unsharp masking.</p>
+                    <p class="text-sm text-gray-500">Simulazione kernel di ricostruzione IA. GAIN per incremento SNR e SHARP per ottimizzazione bordi.</p>
                 </div>
-                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="200">
+                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="100">
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="zap"></i>
                     </div>
                     <h4 class="text-xl font-bold mb-3">3D SPACE & VFA</h4>
-                    <p class="text-sm text-gray-500">Sostituzione dell'angolo costante con treni ad angolo variabile (VFA). Riduce il SAR tramite l'uso di un angolo efficace (&alpha;<sub>RMS</sub>) di 50°.</p>
+                    <p class="text-sm text-gray-500">Treni ad angolo variabile (VFA) per riduzione SAR tramite angolo efficace (&alpha;<sub>RMS</sub>) di 50°.</p>
                 </div>
-                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="300">
+                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="200">
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="settings"></i>
                     </div>
                     <h4 class="text-xl font-bold mb-3">Partial Fourier</h4>
-                    <p class="text-sm text-gray-500">Campionamento frazionario (Phase/Slice) che riduce linearmente il Tempo di Acquisizione (TA), degradando l'SNR proporzionalmente alla frazione acquisita.</p>
+                    <p class="text-sm text-gray-500">Campionamento frazionario per riduzione TA, con gestione degradazione SNR proporzionale.</p>
                 </div>
             </div>
         </div>
@@ -237,33 +227,20 @@
             <p class="text-gray-400 mb-12" data-aos="fade-up">Il simulatore di sequenze RM opera su una base fisica rigorosa, passando da un approccio puramente calcolativo a un sistema di restrizione bidirezionale che replica il comportamento di una vera console clinica</p>
             
             <div class="grid md:grid-cols-2 gap-12">
-                <div data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-panel p-6 rounded-xl border border-white/5" data-aos="fade-up">
                     <h3 class="text-xl font-bold mb-4 text-[#00a0e3] flex items-center gap-2"><i data-lucide="activity" class="w-5 h-5"></i> Gestione del Contrasto</h3>
-                    <ul class="space-y-6 text-gray-400 text-sm">
-                        <li class="glass-panel p-4 rounded-lg border-l-2 border-slate-700">
-                            <strong class="text-white">Spin-Echo (SE, TSE):</strong> L'intensità del segnale è calcolata modulando il recupero longitudinale e il decadimento trasversale in funzione della densità protonica e dell'iniezione di rumore proporzionale a 1/SNR.
-                        </li>
-                        <li class="glass-panel p-4 rounded-lg border-l-2 border-slate-700">
-                            <strong class="text-white">Inversion Recovery (IR):</strong> Modulazione del punto di nulling tissutale tramite il parametro TI, essenziale per sequenze STIR o FLAIR.
-                        </li>
-                        <li class="glass-panel p-4 rounded-lg border-l-2 border-slate-700">
-                            <strong class="text-white">Gradient-Echo (GRE):</strong> Inclusione dell'equazione di Ernst per ottimizzare la magnetizzazione trasversale in funzione del Flip Angle e del TR.
-                        </li>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li><strong class="text-white">Spin-Echo:</strong> Calcolo intensità tramite rilassamento T1/T2 e rumore gaussiano 1/SNR.</li>
+                        <li><strong class="text-white">Inversion Recovery:</strong> Modulazione nulling tissutale tramite parametro TI (STIR/FLAIR).</li>
+                        <li><strong class="text-white">Gradient-Echo:</strong> Ottimizzazione tramite equazione di Ernst e Flip Angle dinamico.</li>
                     </ul>
                 </div>
-
-                <div data-aos="fade-up" data-aos-delay="200">
-                    <h3 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5"></i> Sicurezza e Vincoli (SAR/ESP)</h3>
-                    <ul class="space-y-6 text-gray-400 text-sm">
-                        <li class="glass-panel p-4 rounded-lg border-l-2 border-red-900">
-                            <strong class="text-white">Echo Spacing Dinamico (ESP):</strong> Regolato inversamente dalla Bandwidth (BW). Impone vincoli rigidi sul TE minimo impostabile dall'operatore.
-                        </li>
-                        <li class="glass-panel p-4 rounded-lg border-l-2 border-red-900">
-                            <strong class="text-white">Assorbimento Termico (SAR):</strong> Motore dinamico vincolante. Superare i limiti normativi (es. 3.2 W/kg per Encefalo) innesca limitazioni rigide sul TR minimo o sul Flip Angle massimo, notificate visivamente all'utente.
-                        </li>
-                        <li class="glass-panel p-4 rounded-lg border-l-2 border-red-900">
-                            <strong class="text-white">Fattori di Accelerazione (GRAPPA):</strong> Riducono il TA penalizzando l'SNR proporzionalmente alla radice del fattore R di sottocampionamento.
-                        </li>
+                <div class="glass-panel p-6 rounded-xl border border-white/5" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5"></i> Sicurezza e Vincoli</h3>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li><strong class="text-white">Echo Spacing (ESP):</strong> Vincolato dalla BW; determina il TE minimo.</li>
+                        <li><strong class="text-white">SAR Dinamico:</strong> Limiti normativi (3.2 W/kg Encefalo) con restrizioni rigide su TR/FA.</li>
+                        <li><strong class="text-white">GRAPPA:</strong> Riduzione TA con penalità SNR proporzionale a &radic;R.</li>
                     </ul>
                 </div>
             </div>
@@ -274,19 +251,17 @@
     <section id="gallery" class="py-24 px-6 bg-black flex flex-col items-center border-t border-[#1a1a1a]">
         <div class="max-w-6xl w-full">
             <h2 class="text-3xl font-bold mb-4 italic text-center" data-aos="fade-up">Interfaccia e Flusso di Lavoro</h2>
-            <p class="text-gray-500 text-center mb-16" data-aos="fade-up" data-aos-delay="100">Esplora le sezioni del simulatore progettate per la didattica interattiva.</p>
+            <p class="text-gray-500 text-center mb-16" data-aos="fade-up">Esplora le sezioni del simulatore progettate per la didattica interattiva.</p>
 
             <!-- Video Generale -->
             <div class="w-full max-w-4xl mx-auto aspect-video glass-panel rounded-2xl overflow-hidden shadow-2xl relative mb-16 border border-[#005f9e]/30" data-aos="zoom-in">
-                 <!-- Fallback Sandbox -->
-                 <div id="video-fallback-scroll" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0a] text-center p-6 z-0 border border-dashed border-blue-900 m-2 rounded-xl hidden">
+                 <div id="video-fallback-scroll" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0a] text-center p-6 z-0 hidden border border-dashed border-blue-900 m-2 rounded-xl">
                     <i data-lucide="video" class="w-10 h-10 text-[#005f9e] mb-3 opacity-50"></i>
-                    <p class="text-white font-bold text-sm tracking-widest uppercase mb-1">Motore Video Inibito</p>
-                    <p class="text-gray-500 text-xs max-w-md font-mono">Decodifica di 'registrazione_generale.mp4' bloccata nell'editor. Funzionerà regolarmente su Vercel.</p>
+                    <p class="text-white font-bold text-sm tracking-widest uppercase">Video non caricato</p>
+                    <p class="text-gray-500 text-xs font-mono">Assicurati che 'registrazione_generale.mp4' sia nel repository.</p>
                 </div>
-                <!-- Video Element -->
                 <video id="scrollVideo" controls class="w-full h-full object-cover relative z-10"
-                       onerror="this.style.display='none'; document.getElementById('video-fallback-scroll').classList.remove('hidden'); document.getElementById('video-fallback-scroll').classList.add('flex');">
+                       onerror="this.style.display='none'; document.getElementById('video-fallback-scroll').classList.remove('hidden');">
                     <source src="registrazione_generale.mp4" type="video/mp4">
                     Il browser non supporta il video HTML5.
                 </video>
@@ -295,28 +270,17 @@
             <!-- Griglia Immagini -->
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="glass-panel rounded-xl overflow-hidden group" data-aos="fade-up">
-                    <div class="relative min-h-[250px]">
-                        <div id="img-fallback-contrast" class="absolute inset-0 flex flex-col items-center justify-center bg-[#111] z-0 hidden">
-                             <p class="text-gray-500 text-xs font-mono">Immagine locale bloccata</p>
-                        </div>
-                        <img src="contrast.png" alt="Parametri di Contrasto" class="w-full relative z-10 transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('img-fallback-contrast').classList.remove('hidden'); document.getElementById('img-fallback-contrast').classList.add('flex');">
-                    </div>
-                    <div class="p-6 border-t border-[#262626] bg-[#0c0c0c] relative z-20">
+                    <img src="contrast.png" alt="Contrasto" class="w-full relative z-10 transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/800x600/111/005f9e?text=Contrast+Panel'">
+                    <div class="p-6 border-t border-[#262626] bg-[#0c0c0c]">
                         <h4 class="font-bold text-[#00a0e3] mb-2">Pannello Contrasto</h4>
-                        <p class="text-sm text-gray-400">Regolazione fine di TR, TE e Flip Angle con feedback immediato sul rendering tissutale.</p>
+                        <p class="text-sm text-gray-400">Regolazione di TR, TE e FA con feedback istantaneo.</p>
                     </div>
                 </div>
-
                 <div class="glass-panel rounded-xl overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
-                    <div class="relative min-h-[250px]">
-                        <div id="img-fallback-res" class="absolute inset-0 flex flex-col items-center justify-center bg-[#111] z-0 hidden">
-                             <p class="text-gray-500 text-xs font-mono">Immagine locale bloccata</p>
-                        </div>
-                        <img src="resolution-common.png" alt="Parametri di Risoluzione" class="w-full relative z-10 transition-transform duration-700 group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('img-fallback-res').classList.remove('hidden'); document.getElementById('img-fallback-res').classList.add('flex');">
-                    </div>
-                    <div class="p-6 border-t border-[#262626] bg-[#0c0c0c] relative z-20">
+                    <img src="resolution-common.png" alt="Risoluzione" class="w-full relative z-10 transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/800x600/111/005f9e?text=Resolution+Panel'">
+                    <div class="p-6 border-t border-[#262626] bg-[#0c0c0c]">
                         <h4 class="font-bold text-[#00a0e3] mb-2">Geometria e Risoluzione</h4>
-                        <p class="text-sm text-gray-400">Controllo FOV, spessore fetta e matrice base per analizzare l'impatto sulla dimensione del Voxel e sull'SNR.</p>
+                        <p class="text-sm text-gray-400">Controllo FOV e matrice per analisi voxel e SNR.</p>
                     </div>
                 </div>
             </div>
@@ -327,22 +291,22 @@
     <section id="register" class="py-24 px-6 bg-[#0c0c0c] border-t border-white/5 relative">
         <div class="max-w-2xl mx-auto glass-panel p-10 rounded-3xl border-t-4 border-[#005f9e] relative z-10" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-4 text-center uppercase tracking-widest siemens-font">Richiesta Accesso</h2>
-            <p class="text-gray-500 text-center mb-10 text-sm italic">
-                L'approvazione è gestita manualmente. Inserire esclusivamente dati istituzionali.
-            </p>
+            <p class="text-gray-500 text-center mb-10 text-sm italic">Le registrazioni sono approvate manualmente. Inserisci i dati istituzionali.</p>
             
+            <!-- FORM FIX: Cambiato ID placeholder Formspree e rimosso readonly da Università -->
             <form action="https://formspree.io/f/mqakevzz" method="POST" class="space-y-6" id="registration-form">
                 <input type="hidden" name="_subject" value="Nuova Richiesta Accesso SIMRM">
-                <input type="hidden" name="_replyto" value="%email%">
                 
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="Nome" placeholder="Nome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
-                    <input type="text" name="Cognome" placeholder="Cognome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
+                    <input type="text" name="Nome" placeholder="Nome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white">
+                    <input type="text" name="Cognome" placeholder="Cognome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white">
                 </div>
-                <input type="email" name="Email_Istituzionale" placeholder="Mail Istituzionale (es nome.cognome@studenti.unipd.it)" required class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
+                <input type="email" name="Email_Istituzionale" placeholder="Mail Istituzionale (es nome.cognome@studenti.unipd.it)" required class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white">
+                
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="Matricola" placeholder="Matricola (Es. 1234567)" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
-                    <input type="text" name="Università" value="Università di Padova" readonly class="bg-[#1a1a1a] border border-white/5 p-3 rounded outline-none text-gray-500 cursor-not-allowed">
+                    <input type="text" name="Matricola" placeholder="Matricola (Es. 1234567)" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white">
+                    <!-- Sbloccato: rimosso readonly e aggiunto placeholder -->
+                    <input type="text" name="Università" placeholder="Università di Padova" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white">
                 </div>
                 
                 <div id="form-status" class="hidden p-4 rounded-lg text-sm text-center font-bold"></div>
@@ -357,75 +321,60 @@
     <!-- Footer -->
     <footer class="py-12 px-6 bg-black border-t border-white/5 text-center">
         <div class="max-w-4xl mx-auto">
-            <p class="text-gray-400 mb-6">Sviluppato da <span class="text-white font-bold italic">Francesco Fugaro</span> per uso didattico.</p>
+            <p class="text-gray-400 mb-6">Sviluppato da <span class="text-white font-bold italic">Francesco Fugaro</span></p>
             <div class="text-[10px] text-gray-600 uppercase tracking-widest space-y-2">
-                <p>Ringraziamenti e Dataset Pubblici Fantocci:</p>
                 <div class="flex justify-center gap-8 mt-2">
-                    <a href="https://github.com/leoliuf/MRiLab.git" target="_blank" class="hover:text-blue-500 transition-colors">Encefalo: Modello MriLab</a>
-                    <a href="https://zenodo.org/records/3431873" target="_blank" class="hover:text-blue-500 transition-colors">Addome: CHAOS Challenge (CT-MR)</a>
+                    <a href="https://github.com/leoliuf/MRiLab.git" target="_blank" class="hover:text-blue-500 transition-colors">Head: MriLab</a>
+                    <a href="https://zenodo.org/records/3431873" target="_blank" class="hover:text-blue-500 transition-colors">Abdomen: CHAOS Challenge</a>
                 </div>
                 <p class="pt-8 opacity-50">© 2024-2026 SIMRM Project. Riproduzione vietata senza autorizzazione.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Assistente Didattico AI Modal (Bottom Right) -->
-    <button onclick="toggleAIModal()" class="fixed bottom-6 right-6 z-40 bg-[#005f9e] hover:bg-[#0076c0] text-white p-4 rounded-full shadow-lg shadow-blue-900/50 transition-transform transform hover:scale-110 flex items-center justify-center group">
-        <i data-lucide="sparkles" class="w-6 h-6"></i>
-        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ease-in-out ml-0 group-hover:ml-2 font-bold text-sm">Chiedi all'AI ✨</span>
+    <!-- AI Buttons -->
+    <button onclick="toggleProtocolModal()" class="fixed bottom-6 left-6 z-40 bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-full shadow-lg transition-transform transform hover:scale-110 flex items-center justify-center group">
+        <i data-lucide="file-text" class="w-6 h-6"></i>
+        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ml-0 group-hover:ml-2 font-bold text-sm">Genera Protocollo AI ✨</span>
     </button>
 
-    <div id="ai-modal" class="fixed inset-0 z-50 hidden flex justify-center items-center bg-black/60 opacity-0">
-        <div class="glass-panel w-full max-w-lg md:max-w-2xl h-[80vh] max-h-[800px] rounded-2xl flex flex-col border border-[#005f9e]/50 shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="ai-modal-content">
-            <div class="bg-[#111] border-b border-white/10 p-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#005f9e] rounded-full flex items-center justify-center"><i data-lucide="brain-circuit" class="text-white w-6 h-6"></i></div>
-                    <div>
-                        <h3 class="font-bold text-white flex items-center gap-2">SIMRM Tutor AI ✨</h3>
-                        <p class="text-xs text-blue-400">Alimentato da Gemini API</p>
-                    </div>
-                </div>
-                <button onclick="toggleAIModal()" class="text-gray-400 hover:text-white transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
-            </div>
-            
-            <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 bg-[#0a0a0a]/50">
-                <div class="chat-bubble-ai p-4 rounded-xl max-w-[85%] text-sm text-gray-200 leading-relaxed">
-                    Ciao! Sono il tuo Tutor AI integrato in SIMRM. Sono qui per aiutarti a ripassare la fisica della Risonanza Magnetica, le equazioni di Bloch o per spiegarti come i parametri (TR, TE, FA) influenzano il segnale. <br><br>Cosa vorresti sapere prima di accedere al simulatore?
-                </div>
-            </div>
+    <button onclick="toggleAIModal()" class="fixed bottom-6 right-6 z-40 bg-[#005f9e] hover:bg-[#0076c0] text-white p-4 rounded-full shadow-lg transition-transform transform hover:scale-110 flex items-center justify-center group">
+        <i data-lucide="sparkles" class="w-6 h-6"></i>
+        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ml-0 group-hover:ml-2 font-bold text-sm">Chiedi all'AI ✨</span>
+    </button>
 
-            <div class="p-4 bg-[#111] border-t border-white/10 flex gap-2 items-end">
-                <textarea id="ai-input" rows="1" placeholder="Es: Come influisce il TR sul contrasto T1?..." class="flex-1 bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-[#005f9e] resize-none overflow-hidden max-h-32" oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'"></textarea>
-                <button onclick="sendMessageToAI()" class="bg-[#005f9e] hover:bg-blue-500 text-white p-3 rounded-lg transition-colors flex items-center justify-center shrink-0">
-                    <i data-lucide="send" class="w-5 h-5"></i>
-                </button>
+    <!-- Modals (AI & Protocol) -->
+    <div id="ai-modal" class="fixed inset-0 z-50 hidden flex justify-center items-center bg-black/60 opacity-0">
+        <div class="glass-panel w-full max-w-lg h-[80vh] rounded-2xl flex flex-col border border-[#005f9e]/50 overflow-hidden transform scale-95 transition-transform duration-300" id="ai-modal-content">
+            <div class="bg-[#111] p-4 flex justify-between items-center border-b border-white/10">
+                <h3 class="font-bold text-white flex items-center gap-2"><i data-lucide="brain-circuit" class="w-5 h-5"></i> SIMRM Tutor AI</h3>
+                <button onclick="toggleAIModal()"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4">
+                <div class="chat-bubble-ai p-4 rounded-xl text-sm text-gray-200">
+                    Ciao! Come posso aiutarti oggi con la fisica della RM o le sequenze?
+                </div>
+            </div>
+            <div class="p-4 bg-[#111] border-t border-white/10 flex gap-2">
+                <input id="ai-input" type="text" placeholder="Chiedi..." class="flex-1 bg-[#1a1a1a] p-3 rounded-lg text-white outline-none border border-white/10 focus:border-[#005f9e]">
+                <button onclick="sendMessageToAI()" class="bg-[#005f9e] p-3 rounded-lg"><i data-lucide="send" class="w-5 h-5"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- Generatore Protocolli AI Modal (Bottom Left) -->
-    <button onclick="toggleProtocolModal()" class="fixed bottom-6 left-6 z-40 bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-full shadow-lg shadow-purple-900/50 transition-transform transform hover:scale-110 flex items-center justify-center group">
-        <i data-lucide="file-text" class="w-6 h-6"></i>
-        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ease-in-out ml-0 group-hover:ml-2 font-bold text-sm">Genera Protocollo AI ✨</span>
-    </button>
-
-    <div id="protocol-modal" class="fixed inset-0 z-50 hidden flex justify-center items-center bg-black/60 opacity-0 transition-opacity duration-300">
-        <div class="glass-panel w-full max-w-lg md:max-w-2xl h-[80vh] max-h-[800px] rounded-2xl flex flex-col border border-purple-600/50 shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="protocol-modal-content">
-            <div class="bg-[#111] border-b border-white/10 p-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center"><i data-lucide="clipboard-list" class="text-white w-6 h-6"></i></div>
-                    <div><h3 class="font-bold text-white flex items-center gap-2">Generatore Protocolli Clinici</h3></div>
-                </div>
-                <button onclick="toggleProtocolModal()" class="text-gray-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+    <div id="protocol-modal" class="fixed inset-0 z-50 hidden flex justify-center items-center bg-black/60 opacity-0">
+        <div class="glass-panel w-full max-w-lg h-[80vh] rounded-2xl flex flex-col border border-purple-600/50 overflow-hidden transform scale-95 transition-transform duration-300" id="protocol-modal-content">
+            <div class="bg-[#111] p-4 flex justify-between items-center border-b border-white/10">
+                <h3 class="font-bold text-white flex items-center gap-2"><i data-lucide="clipboard-list" class="w-5 h-5"></i> Protocolli AI</h3>
+                <button onclick="toggleProtocolModal()"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
-            <div id="protocol-container" class="flex-1 overflow-y-auto p-4 space-y-4 bg-[#0a0a0a]/50 text-gray-200 text-sm leading-relaxed">
-                <div class="bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded-r-lg">Inserisci un distretto anatomico o quesito clinico per ottenere parametri di simulazione consigliati.</div>
-                <div id="protocol-result" class="hidden space-y-3 mt-4 bg-[#111] p-5 rounded-lg border border-white/5"></div>
-                <div id="protocol-loading" class="hidden flex-col items-center justify-center py-8 gap-4"><div class="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div><p class="text-purple-400 text-xs font-bold animate-pulse">Analisi Modello...</p></div>
+            <div id="protocol-container" class="flex-1 overflow-y-auto p-4 space-y-4">
+                <div class="bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded text-sm">Inserisci un distretto anatomico.</div>
+                <div id="protocol-result" class="hidden bg-[#111] p-4 rounded border border-white/5"></div>
             </div>
-            <div class="p-4 bg-[#111] border-t border-white/10 flex gap-2 items-center">
-                <input type="text" id="protocol-input" placeholder="Es: Ginocchio..." class="flex-1 bg-[#1a1a1a] border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-purple-600">
-                <button onclick="generateProtocol()" class="bg-purple-600 hover:bg-purple-500 text-white p-3 rounded-lg font-bold px-4">Genera</button>
+            <div class="p-4 bg-[#111] border-t border-white/10 flex gap-2">
+                <input id="protocol-input" type="text" placeholder="Es: Ginocchio..." class="flex-1 bg-[#1a1a1a] p-3 rounded-lg text-white outline-none border border-white/10 focus:border-purple-600">
+                <button onclick="generateProtocol()" class="bg-purple-600 p-3 rounded-lg"><i data-lucide="wand-2" class="w-5 h-5"></i></button>
             </div>
         </div>
     </div>
@@ -436,137 +385,80 @@
         lucide.createIcons();
         AOS.init({ duration: 800, once: true });
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // AI Modal logic (Tutor)
-        const apiKey = ""; // Da configurare per Vercel
-        
-        let isWaitingForResponse = false;
-        function toggleAIModal() {
-            const m = document.getElementById('ai-modal');
-            const mc = document.getElementById('ai-modal-content');
+        // Modals
+        function toggleAIModal() { toggleModal('ai-modal', 'ai-modal-content'); }
+        function toggleProtocolModal() { toggleModal('protocol-modal', 'protocol-modal-content'); }
+        function toggleModal(id, cid) {
+            const m = document.getElementById(id), c = document.getElementById(cid);
             if (m.classList.contains('hidden')) {
-                m.classList.remove('hidden'); void m.offsetWidth; m.classList.remove('opacity-0'); mc.classList.remove('scale-95');
-                document.getElementById('ai-input').focus();
+                m.classList.remove('hidden'); void m.offsetWidth; m.classList.remove('opacity-0'); c.classList.remove('scale-95');
             } else {
-                m.classList.add('opacity-0'); mc.classList.add('scale-95'); setTimeout(() => m.classList.add('hidden'), 300);
+                m.classList.add('opacity-0'); c.classList.add('scale-95'); setTimeout(() => m.classList.add('hidden'), 300);
             }
         }
 
-        document.getElementById('ai-input').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessageToAI(); }
-        });
-
-        function appendMessage(text, sender) {
-            const chatContainer = document.getElementById('chat-container');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = sender === 'user' ? 'chat-bubble-user p-4 rounded-xl max-w-[85%] text-sm text-white ml-auto leading-relaxed' : 'chat-bubble-ai p-4 rounded-xl max-w-[85%] text-sm text-gray-200 leading-relaxed';
-            msgDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>');
-            chatContainer.appendChild(msgDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        async function fetchGeminiResponse(prompt, systemInstruction, retryCount = 0) {
-            const delays = [1000, 2000, 4000];
+        // Gemini API logic (Simplified)
+        const apiKey = ""; 
+        async function askGemini(prompt, system) {
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: systemInstruction }] } })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: system }] } })
                 });
-                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Errore nella generazione.";
-            } catch (error) {
-                if (retryCount < delays.length) {
-                    await new Promise(res => setTimeout(res, delays[retryCount]));
-                    return fetchGeminiResponse(prompt, systemInstruction, retryCount + 1);
-                }
-                return "Errore di rete. Riprova tra poco.";
-            }
+                const d = await r.json();
+                return d.candidates[0].content.parts[0].text;
+            } catch (e) { return "Errore di connessione API."; }
         }
 
         async function sendMessageToAI() {
-            const aiInput = document.getElementById('ai-input');
-            const text = aiInput.value.trim();
-            if (!text || isWaitingForResponse) return;
-            aiInput.value = ''; aiInput.style.height = ''; 
-            isWaitingForResponse = true;
-            appendMessage(text, 'user');
-            
-            const chatContainer = document.getElementById('chat-container');
-            const ind = document.createElement('div'); ind.id = 'typing-indicator'; ind.className = 'chat-bubble-ai p-4 rounded-xl max-w-[85%] text-sm text-gray-200 flex items-center gap-1 typing-indicator w-16 h-10'; ind.innerHTML = '<span></span><span></span><span></span>';
-            chatContainer.appendChild(ind); chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            const inst = "Sei un assistente didattico esperto in Fisica della Risonanza Magnetica (RM). Aiuti gli studenti del secondo anno. Sii conciso.";
-            const aiResponse = await fetchGeminiResponse(text, inst);
-            
-            document.getElementById('typing-indicator')?.remove();
-            appendMessage(aiResponse, 'ai');
-            isWaitingForResponse = false;
+            const i = document.getElementById('ai-input'), t = i.value.trim();
+            if(!t) return;
+            i.value = '';
+            const c = document.getElementById('chat-container');
+            c.innerHTML += `<div class="chat-bubble-user p-4 rounded-xl text-sm text-white ml-auto">${t}</div>`;
+            const res = await askGemini(t, "Sei un Tutor RM. Rispondi in italiano in modo conciso.");
+            c.innerHTML += `<div class="chat-bubble-ai p-4 rounded-xl text-sm text-gray-200">${res}</div>`;
+            c.scrollTop = c.scrollHeight;
         }
-
-        // Protocol Modal logic
-        function toggleProtocolModal() {
-            const m = document.getElementById('protocol-modal');
-            const mc = document.getElementById('protocol-modal-content');
-            if (m.classList.contains('hidden')) {
-                m.classList.remove('hidden'); void m.offsetWidth; m.classList.remove('opacity-0'); mc.classList.remove('scale-95');
-                document.getElementById('protocol-input').focus();
-            } else {
-                m.classList.add('opacity-0'); mc.classList.add('scale-95'); setTimeout(() => m.classList.add('hidden'), 300);
-            }
-        }
-
-        document.getElementById('protocol-input').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') { e.preventDefault(); generateProtocol(); }
-        });
 
         async function generateProtocol() {
-            const inp = document.getElementById('protocol-input');
-            const res = document.getElementById('protocol-result');
-            const load = document.getElementById('protocol-loading');
-            if(!inp.value) return;
-            res.classList.add('hidden'); load.classList.remove('hidden'); load.classList.add('flex');
-            
-            const inst = "Sei un TSRM Senior. L'utente fornisce un quesito diagnostico. Genera un protocollo RM base specificando le sequenze e i range ideali di TR e TE. Struttura in HTML usando <ul>, <li class='mb-2'> e <strong class='text-purple-400'>.";
-            const aiText = await fetchGeminiResponse(`Genera protocollo RM per: ${inp.value}`, inst);
-            
-            res.innerHTML = aiText.replace(/```html/g, '').replace(/```/g, '');
-            load.classList.add('hidden'); load.classList.remove('flex');
-            res.classList.remove('hidden');
+            const i = document.getElementById('protocol-input'), t = i.value.trim();
+            if(!t) return;
+            const r = document.getElementById('protocol-result');
+            r.classList.remove('hidden'); r.innerHTML = "Generazione...";
+            const res = await askGemini(`Genera protocollo per: ${t}`, "Sei un TSRM. Suggerisci TR e TE in HTML (<ul><li>).");
+            r.innerHTML = res.replace(/```html/g, '').replace(/```/g, '');
         }
 
-        // Formspree Logic
+        // Formspree Handler
         const form = document.getElementById("registration-form");
-        const statusDiv = document.getElementById("form-status");
-        const submitBtn = document.getElementById("submit-btn");
+        const status = document.getElementById("form-status");
+        const btn = document.getElementById("submit-btn");
 
-        form.addEventListener("submit", async function(event) {
-            event.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Invio in corso...';
-            statusDiv.className = "hidden";
-            const data = new FormData(event.target);
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.innerHTML = 'Invio...';
+            status.className = "hidden";
+            
             try {
-                const response = await fetch(event.target.action, { method: form.method, body: data, headers: { 'Accept': 'application/json' } });
-                if (response.ok) {
-                    statusDiv.innerHTML = "<i data-lucide='check-circle' class='inline w-5 h-5 mr-1 mb-1'></i> Richiesta inviata con successo.";
-                    statusDiv.className = "p-4 rounded-lg text-sm text-center font-bold bg-green-900/30 text-green-400 border border-green-500/50 block";
+                const r = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (r.ok) {
+                    status.innerHTML = "Richiesta inviata con successo!";
+                    status.className = "p-4 rounded bg-green-900/30 text-green-400 block";
                     form.reset();
-                } else { throw new Error("Errore di validazione server."); }
-            } catch (error) {
-                statusDiv.innerHTML = `<i data-lucide='alert-triangle' class='inline w-5 h-5 mr-1 mb-1'></i> ${error.message}`;
-                statusDiv.className = "p-4 rounded-lg text-sm text-center font-bold bg-red-900/30 text-red-400 border border-red-500/50 block";
+                } else { throw new Error(); }
+            } catch {
+                status.innerHTML = "Errore validazione server. Verifica l'ID Formspree.";
+                status.className = "p-4 rounded bg-red-900/30 text-red-400 block";
             } finally {
-                lucide.createIcons();
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Invia Richiesta Registrazione';
+                btn.disabled = false;
+                btn.innerHTML = 'Invia Richiesta Registrazione';
             }
         });
     </script>
