@@ -1,18 +1,7 @@
 <!DOCTYPE html>
 <html lang="it" class="scroll-smooth">
 <head>
-    <!-- Iubenda Banner Script (Caricato con controlli di sicurezza per evitare errori nella sandbox del Canvas) -->
-    <script type="text/javascript">
-        try {
-            var isSandbox = false;
-            try { !!window.localStorage; } catch(e) { isSandbox = true; }
-            if (!isSandbox) {
-                var iubendaScript = document.createElement('script');
-                iubendaScript.src = "https://embeds.iubenda.com/widgets/3155cd64-85d0-4c21-a5f3-37aac8e855a1.js";
-                document.head.appendChild(iubendaScript);
-            }
-        } catch(e) { console.warn("Iubenda script bypassato in ambiente protetto"); }
-    </script>
+    <script type="text/javascript" src="https://embeds.iubenda.com/widgets/3155cd64-85d0-4c21-a5f3-37aac8e855a1.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIMRM - Simulatore di Sequenze 2D e 3D</title>
