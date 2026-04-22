@@ -78,7 +78,7 @@
             <span class="text-xl font-bold tracking-tighter siemens-font">SIM<span class="text-[#005f9e]">RM</span></span>
         </div>
         <div class="hidden md:flex gap-8 text-sm uppercase tracking-widest font-semibold text-gray-400">
-            <a href="#mission" class="hover:text-[#005f9e] transition-colors">Mission</a>
+            <a href="#mission" class="hover:text-[#005f9e] transition-colors">Progetto</a>
             <a href="#features" class="hover:text-[#005f9e] transition-colors">Tecnologia</a>
             <a href="#physics" class="hover:text-[#005f9e] transition-colors">Dinamica Segnale</a>
             <a href="#gallery" class="hover:text-[#005f9e] transition-colors">Interfaccia</a>
@@ -130,7 +130,7 @@
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
             <div data-aos="fade-right">
                 <h2 class="text-3xl font-bold mb-6 siemens-font flex items-center gap-3">
-                    <span class="w-8 h-1 bg-[#005f9e]"></span> La Missione Didattica
+                    <span class="w-8 h-1 bg-[#005f9e]"></span> Il Progetto
                 </h2>
                 <div class="space-y-4 text-gray-400 leading-relaxed">
                     <p>
@@ -190,7 +190,7 @@
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-4xl font-bold mb-4 italic">Caratteristiche Avanzate</h2>
-                <p class="text-gray-500">Motore di rendering basato su fisica rigorosa</p>
+                <p class="text-gray-500">Motore di rendering basato su fisica reale</p>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up">
@@ -334,42 +334,35 @@
     <footer class="py-12 px-6 bg-black border-t border-white/5 text-center">
         <div class="max-w-4xl mx-auto">
             
-            <!-- Disclaimer Scientifico -->
+            <!-- Disclaimer Scientifico Modificato -->
             <div class="mb-8 p-4 bg-red-900/10 border border-red-900/30 rounded-lg max-w-3xl mx-auto text-left">
                 <p class="text-xs text-red-400/80 leading-relaxed font-mono">
-                    <strong class="text-red-500 uppercase tracking-widest block mb-1">Disclaimer Scientifico:</strong>
                     Il simulatore ha scopi esclusivamente didattici. I dati prodotti (SAR, SNR, TA) sono simulazioni algoritmiche e non devono essere utilizzati per pianificazioni cliniche su pazienti reali.
                 </p>
             </div>
 
-            <!-- Link Legali Iubenda protetti per Sandbox -->
+            <!-- Link Legali Iubenda -->
             <div class="flex justify-center gap-6 mb-6 text-sm">
                 <a href="https://www.iubenda.com/privacy-policy/85386503" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Privacy Policy ">Privacy Policy</a>
                 <script type="text/javascript">
-                    try {
-                        var isSandbox = false;
-                        try { !!window.localStorage; } catch(e) { isSandbox = true; }
-                        if (!isSandbox) {
-                            (function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; if(tag){tag.parentNode.insertBefore(s,tag);}else{d.head.appendChild(s);}}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);
-                        }
-                    } catch(e) {}
+                    (function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; if(tag){tag.parentNode.insertBefore(s,tag);}else{d.head.appendChild(s);}}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);
                 </script>
                 
                 <span class="text-gray-700">|</span>
                 
                 <a href="https://www.iubenda.com/privacy-policy/85386503/cookie-policy" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Cookie Policy ">Cookie Policy</a>
                 <script type="text/javascript">
-                    try {
-                        var isSandbox2 = false;
-                        try { !!window.localStorage; } catch(e) { isSandbox2 = true; }
-                        if (!isSandbox2) {
-                            (function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; if(tag){tag.parentNode.insertBefore(s,tag);}else{d.head.appendChild(s);}}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);
-                        }
-                    } catch(e) {}
+                    (function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; if(tag){tag.parentNode.insertBefore(s,tag);}else{d.head.appendChild(s);}}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);
                 </script>
             </div>
 
-            <p class="text-gray-400 mb-6">Sviluppato da <span class="text-white font-bold italic">Francesco Fugaro</span></p>
+            <p class="text-gray-400 mb-4">Sviluppato da <span class="text-white font-bold italic">Francesco Fugaro</span></p>
+            
+            <!-- Bottone Citazione (Evidenziato) -->
+            <button onclick="toggleCitationModal()" class="mb-6 text-xs font-semibold border border-[#005f9e]/50 bg-[#005f9e]/10 px-4 py-2 rounded hover:bg-[#005f9e]/30 hover:text-white transition-colors uppercase tracking-widest text-gray-300">
+                Citazione
+            </button>
+
             <div class="text-[10px] text-gray-600 uppercase tracking-widest space-y-2">
                 <div class="flex justify-center gap-8 mt-2">
                     <a href="https://github.com/leoliuf/MRiLab.git" target="_blank" class="hover:text-blue-500 transition-colors">Head: MriLab</a>
@@ -379,6 +372,22 @@
             </div>
         </div>
     </footer>
+
+    <!-- Modale Citazione -->
+    <div id="citation-modal" class="fixed inset-0 z-50 hidden flex justify-center items-center bg-black/60 opacity-0 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-md mx-4 p-6 rounded-2xl border border-white/10 transform scale-95 transition-transform duration-300" id="citation-modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-white text-sm uppercase tracking-widest">Formato Citazione (APA)</h3>
+                <button onclick="toggleCitationModal()"><i data-lucide="x" class="w-5 h-5 text-gray-400 hover:text-white"></i></button>
+            </div>
+            <div class="bg-[#111] p-4 rounded border border-white/5 font-mono text-sm text-gray-300 overflow-x-auto">
+                Fugaro, F. (2026). <em>SIMRM: Simulatore di Sequenze di Risonanza Magnetica</em>. <a href="https://simrmportal.vercel.app/" target="_blank" class="text-[#00a0e3] hover:underline">https://simrmportal.vercel.app/</a>
+            </div>
+            <button onclick="copyCitation()" id="copy-btn" class="mt-4 w-full bg-[#1a1a1a] hover:bg-[#222] border border-white/10 text-white text-xs font-bold py-2 rounded uppercase tracking-widest transition-all flex justify-center items-center gap-2">
+                <i data-lucide="copy" class="w-4 h-4"></i> Copia Testo
+            </button>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -434,6 +443,39 @@
                     submitBtn.innerHTML = 'Invia Richiesta Registrazione';
                     lucide.createIcons();
                 }
+            });
+        }
+        
+        // Logica Modale Citazione
+        function toggleCitationModal() {
+            const m = document.getElementById('citation-modal');
+            const c = document.getElementById('citation-modal-content');
+            if (m.classList.contains('hidden')) {
+                m.classList.remove('hidden'); 
+                void m.offsetWidth; // Force reflow
+                m.classList.remove('opacity-0'); 
+                c.classList.remove('scale-95');
+            } else {
+                m.classList.add('opacity-0'); 
+                c.classList.add('scale-95'); 
+                setTimeout(() => {
+                    m.classList.add('hidden');
+                    const btn = document.getElementById('copy-btn');
+                    btn.innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i> Copia Testo';
+                    lucide.createIcons();
+                }, 300);
+            }
+        }
+
+        // Logica Copia Citazione
+        function copyCitation() {
+            const citationText = "Fugaro, F. (2026). SIMRM: Simulatore di Sequenze di Risonanza Magnetica. https://simrmportal.vercel.app/";
+            navigator.clipboard.writeText(citationText).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-500"></i> Copiato!';
+                lucide.createIcons();
+            }).catch(err => {
+                console.error("Errore durante la copia:", err);
             });
         }
         
