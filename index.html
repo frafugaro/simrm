@@ -85,7 +85,7 @@
             position: absolute;
             inset: 0;
             background: linear-gradient(to bottom, rgba(10, 10, 10, 0) 60%, rgba(10, 10, 10, 0.8) 100%);
-            pointer-events: none; /* Permette il click sui controlli video sottostanti */
+            pointer-events: none;
             z-index: 20;
         }
     </style>
@@ -274,13 +274,12 @@
 
             <!-- Video Generale Autoplay -->
             <div class="w-full max-w-4xl mx-auto video-container mb-16 border border-[#005f9e]/30" data-aos="zoom-in" data-aos-duration="1000">
-                 <div class="video-overlay"></div> <!-- Sfumatura nera in basso -->
+                 <div class="video-overlay"></div>
                  <div id="video-fallback-scroll" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0a] text-center p-6 z-0 hidden border border-dashed border-blue-900 m-2 rounded-xl">
                     <i data-lucide="video" class="w-10 h-10 text-[#005f9e] mb-3 opacity-50"></i>
                     <p class="text-white font-bold text-sm tracking-widest uppercase">Video non caricato</p>
                     <p class="text-gray-500 text-xs font-mono">Assicurati che 'registrazione_generale.mp4' sia nel repository.</p>
                 </div>
-                <!-- Aggiunto autoplay, loop e muted. Muted è essenziale per l'autoplay in tutti i browser moderni -->
                 <video id="mainVideo" autoplay loop muted playsinline controls class="w-full h-full object-cover relative z-10"
                        onerror="this.style.display='none'; document.getElementById('video-fallback-scroll').classList.remove('hidden');">
                     <source src="registrazione_generale.mp4" type="video/mp4">
@@ -317,7 +316,6 @@
             <h2 class="text-2xl font-bold mb-4 text-center uppercase tracking-widest siemens-font">Richiesta Accesso</h2>
             <p class="text-gray-500 text-center mb-10 text-sm italic">Le registrazioni sono approvate manualmente. Inserisci i dati istituzionali.</p>
             
-            <!-- FORM FIX: Endpoint aggiornato a xlgapwrz -->
             <form action="https://formspree.io/f/xlgapwrz" method="POST" class="space-y-6" id="registration-form">
                 <input type="hidden" name="_subject" value="Nuova Richiesta Accesso SIMRM">
                 
@@ -420,18 +418,26 @@
             }
         }
 
-        // Gemini AI Setup
-        const apiKey = ""; 
+        // INTEGRAZIONE BACKEND: Chiamata sicura al proxy Vercel (/api/chat)
         async function askGemini(prompt, system) {
             try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                const r = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: system }] } })
+                    body: JSON.stringify({ 
+                        prompt: prompt, 
+                        systemInstruction: system 
+                    })
                 });
+                
+                if (!r.ok) throw new Error('Errore server proxy API');
+                
                 const d = await r.json();
                 return d.candidates[0].content.parts[0].text;
-            } catch (e) { return "Errore API. Verifica chiave o connessione."; }
+            } catch (e) { 
+                console.error(e);
+                return "Errore di connessione al modulo AI backend. Verifica la configurazione su Vercel."; 
+            }
         }
 
         async function sendMessageToAI() {
@@ -449,7 +455,7 @@
             const i = document.getElementById('protocol-input'), t = i.value.trim();
             if(!t) return;
             const r = document.getElementById('protocol-result');
-            r.classList.remove('hidden'); r.innerHTML = "Generazione...";
+            r.classList.remove('hidden'); r.innerHTML = "Generazione in corso tramite backend...";
             const res = await askGemini(`Genera protocollo per: ${t}`, "Sei un TSRM. Suggerisci TR e TE in HTML (<ul><li>).");
             r.innerHTML = res.replace(/```html/g, '').replace(/```/g, '');
         }
@@ -486,11 +492,10 @@
             }
         });
         
-        // Autoplay Video on Scroll via IntersectionObserver
+        // Autoplay Video
         document.addEventListener("DOMContentLoaded", function() {
             const videoElement = document.getElementById('mainVideo');
             if(videoElement) {
-                // Imposta inizialmente un'opacità a 0 per la transizione di ingresso
                 videoElement.style.opacity = '0';
                 videoElement.style.transition = 'opacity 1s ease-in-out';
                 
@@ -498,16 +503,14 @@
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             videoElement.play().then(() => {
-                                // Mostra il video in modo fluido quando parte la riproduzione
                                 videoElement.style.opacity = '1';
-                            }).catch(e => console.log("Autoplay impedito dal browser, l'utente deve interagire prima."));
+                            }).catch(e => console.log("Autoplay policy error."));
                         } else {
                             videoElement.pause();
-                            // Opzionale: sfuma il video quando esce dalla vista
                             videoElement.style.opacity = '0';
                         }
                     });
-                }, { threshold: 0.3 }); // Avvia quando il 30% del video è visibile
+                }, { threshold: 0.3 });
                 
                 observer.observe(videoElement);
             }
