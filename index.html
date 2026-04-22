@@ -46,28 +46,6 @@
         .hero-bg {
             background: radial-gradient(circle at center, #002b4d 0%, #0a0a0a 75%);
         }
-        
-        /* AI Chat Modal Styles */
-        #ai-modal, #protocol-modal {
-            backdrop-filter: blur(8px);
-            transition: opacity 0.3s ease-in-out;
-        }
-        .chat-bubble-ai { 
-            background: rgba(0, 95, 158, 0.2); 
-            border-left: 3px solid #005f9e; 
-        }
-        .chat-bubble-user { 
-            background: rgba(255, 255, 255, 0.05); 
-            border-right: 3px solid #4da6ff; 
-            text-align: right; 
-        }
-        .typing-indicator span {
-            animation: blink 1.4s infinite both;
-            height: 6px; width: 6px; background: #00a0e3; border-radius: 50%; display: inline-block; margin: 0 1px;
-        }
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink { 0% { opacity: 0.2; } 20% { opacity: 1; } 100% { opacity: 0.2; } }
 
         /* Stile Custom per Video Autoplay */
         .video-container {
@@ -353,112 +331,11 @@
         </div>
     </footer>
 
-    <!-- AI Buttons -->
-    <button onclick="toggleProtocolModal()" class="fixed bottom-6 left-6 z-40 bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-full shadow-lg transition-transform transform hover:scale-110 flex items-center justify-center group">
-        <i data-lucide="file-text" class="w-6 h-6"></i>
-        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ml-0 group-hover:ml-2 font-bold text-sm">Genera Protocollo AI ✨</span>
-    </button>
-
-    <button onclick="toggleAIModal()" class="fixed bottom-6 right-6 z-40 bg-[#005f9e] hover:bg-[#0076c0] text-white p-4 rounded-full shadow-lg transition-transform transform hover:scale-110 flex items-center justify-center group">
-        <i data-lucide="sparkles" class="w-6 h-6"></i>
-        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 ml-0 group-hover:ml-2 font-bold text-sm">Chiedi all'AI ✨</span>
-    </button>
-
-    <!-- Modals -->
-    <div id="ai-modal" class="fixed inset-0 z-50 hidden flex justify-center items-center bg-black/60 opacity-0">
-        <div class="glass-panel w-full max-w-lg h-[80vh] rounded-2xl flex flex-col border border-[#005f9e]/50 overflow-hidden transform scale-95 transition-transform duration-300" id="ai-modal-content">
-            <div class="bg-[#111] p-4 flex justify-between items-center border-b border-white/10">
-                <h3 class="font-bold text-white flex items-center gap-2"><i data-lucide="brain-circuit" class="w-5 h-5"></i> SIMRM Tutor AI</h3>
-                <button onclick="toggleAIModal()"><i data-lucide="x" class="w-6 h-6"></i></button>
-            </div>
-            <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4">
-                <div class="chat-bubble-ai p-4 rounded-xl text-sm text-gray-200">
-                    Ciao! Come posso aiutarti oggi con la fisica della RM o le sequenze?
-                </div>
-            </div>
-            <div class="p-4 bg-[#111] border-t border-white/10 flex gap-2">
-                <input id="ai-input" type="text" placeholder="Chiedi..." class="flex-1 bg-[#1a1a1a] p-3 rounded-lg text-white outline-none border border-white/10 focus:border-[#005f9e]">
-                <button onclick="sendMessageToAI()" class="bg-[#005f9e] p-3 rounded-lg"><i data-lucide="send" class="w-5 h-5"></i></button>
-            </div>
-        </div>
-    </div>
-
-    <div id="protocol-modal" class="fixed inset-0 z-50 hidden flex justify-center items-center bg-black/60 opacity-0">
-        <div class="glass-panel w-full max-w-lg h-[80vh] rounded-2xl flex flex-col border border-purple-600/50 overflow-hidden transform scale-95 transition-transform duration-300" id="protocol-modal-content">
-            <div class="bg-[#111] p-4 flex justify-between items-center border-b border-white/10">
-                <h3 class="font-bold text-white flex items-center gap-2"><i data-lucide="clipboard-list" class="w-5 h-5"></i> Protocolli AI</h3>
-                <button onclick="toggleProtocolModal()"><i data-lucide="x" class="w-6 h-6"></i></button>
-            </div>
-            <div id="protocol-container" class="flex-1 overflow-y-auto p-4 space-y-4">
-                <div class="bg-purple-900/20 border-l-4 border-purple-500 p-4 rounded text-sm">Inserisci un distretto anatomico.</div>
-                <div id="protocol-result" class="hidden bg-[#111] p-4 rounded border border-white/5"></div>
-            </div>
-            <div class="p-4 bg-[#111] border-t border-white/10 flex gap-2">
-                <input id="protocol-input" type="text" placeholder="Es: Ginocchio..." class="flex-1 bg-[#1a1a1a] p-3 rounded-lg text-white outline-none border border-white/10 focus:border-purple-600">
-                <button onclick="generateProtocol()" class="bg-purple-600 p-3 rounded-lg"><i data-lucide="wand-2" class="w-5 h-5"></i></button>
-            </div>
-        </div>
-    </div>
-
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         lucide.createIcons();
         AOS.init({ duration: 800, once: true });
-
-        // Modal toggles
-        function toggleAIModal() { toggleModal('ai-modal', 'ai-modal-content'); }
-        function toggleProtocolModal() { toggleModal('protocol-modal', 'protocol-modal-content'); }
-        function toggleModal(id, cid) {
-            const m = document.getElementById(id), c = document.getElementById(cid);
-            if (m.classList.contains('hidden')) {
-                m.classList.remove('hidden'); void m.offsetWidth; m.classList.remove('opacity-0'); c.classList.remove('scale-95');
-            } else {
-                m.classList.add('opacity-0'); c.classList.add('scale-95'); setTimeout(() => m.classList.add('hidden'), 300);
-            }
-        }
-
-        // INTEGRAZIONE BACKEND: Chiamata sicura al proxy Vercel (/api/chat)
-        async function askGemini(prompt, system) {
-            try {
-                const r = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        prompt: prompt, 
-                        systemInstruction: system 
-                    })
-                });
-                
-                if (!r.ok) throw new Error('Errore server proxy API');
-                
-                const d = await r.json();
-                return d.candidates[0].content.parts[0].text;
-            } catch (e) { 
-                console.error(e);
-                return "Errore di connessione al modulo AI backend. Verifica la configurazione su Vercel."; 
-            }
-        }
-
-        async function sendMessageToAI() {
-            const i = document.getElementById('ai-input'), t = i.value.trim();
-            if(!t) return;
-            i.value = '';
-            const c = document.getElementById('chat-container');
-            c.innerHTML += `<div class="chat-bubble-user p-4 rounded-xl text-sm text-white ml-auto">${t}</div>`;
-            const res = await askGemini(t, "Sei un Tutor RM. Rispondi in italiano in modo conciso.");
-            c.innerHTML += `<div class="chat-bubble-ai p-4 rounded-xl text-sm text-gray-200">${res}</div>`;
-            c.scrollTop = c.scrollHeight;
-        }
-
-        async function generateProtocol() {
-            const i = document.getElementById('protocol-input'), t = i.value.trim();
-            if(!t) return;
-            const r = document.getElementById('protocol-result');
-            r.classList.remove('hidden'); r.innerHTML = "Generazione in corso tramite backend...";
-            const res = await askGemini(`Genera protocollo per: ${t}`, "Sei un TSRM. Suggerisci TR e TE in HTML (<ul><li>).");
-            r.innerHTML = res.replace(/```html/g, '').replace(/```/g, '');
-        }
 
         // Formspree Handler
         const form = document.getElementById("registration-form");
