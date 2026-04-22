@@ -13,15 +13,21 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Metodo non consentito' });
   }
 
-  const { prompt, systemInstruction } = req.body;
-  const apiKey = process.env.GEMINI_API_KEY;
-
-  if (!apiKey) {
-    return res.status(500).json({ error: 'API Key mancante lato server' });
-  }
-
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+    // Parsing dinamico e validazione del payload
+    let body = req.body;
+    if (typeof body === 'string') {
+        body = JSON.parse(body);
+    }
+    const { prompt, systemInstruction } = body;
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({ error: 'API Key mancante lato server. Variabile non esposta.' });
+    }
+
+    // Downgrade al modello di produzione standard per compatibilità chiavi pubbliche
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -31,13 +37,14 @@ module.exports = async function handler(req, res) {
     });
 
     if (!response.ok) {
-        throw new Error(`Errore HTTP Gemini: ${response.status}`);
+        const errorDetails = await response.text();
+        throw new Error(`Google API Fault: Status ${response.status} | Dettagli: ${errorDetails}`);
     }
 
     const data = await response.json();
     res.status(200).json(data);
   } catch (error) {
-    console.error("Errore Backend:", error);
-    res.status(500).json({ error: 'Errore interno del server proxy' });
+    console.error("Errore Strutturale Backend:", error.message);
+    res.status(500).json({ error: error.message });
   }
 };
