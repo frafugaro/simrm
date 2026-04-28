@@ -12,7 +12,6 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Importazione corretta: aggiunto il peso 900 per supportare il font-black */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono&display=swap');
 
         :root {
@@ -30,7 +29,7 @@
 
         .siemens-font {
             font-family: 'Inter', sans-serif;
-            letter-spacing: -0.07em; /* Kerning compatto del nuovo logo */
+            letter-spacing: -0.07em;
         }
 
         .glass-panel {
@@ -94,8 +93,6 @@
         </div>
 
         <div class="text-center z-10 pt-20" data-aos="fade-up" data-aos-duration="1000">
-            
-            <!-- Nuovo Logo SIMRM Integrato (Responsive) senza quadrato -->
             <h1 class="text-[70px] md:text-[120px] font-black siemens-font text-white leading-none mb-6">
                 SIM<span class="blue-gradient-text">RM</span>
             </h1>
@@ -295,16 +292,17 @@
             
             <!-- Blocco Istruzioni -->
             <div class="bg-[#111111] border border-white/10 p-5 rounded-xl mb-8">
-                <h3 class="text-[#005f9e] font-bold text-center mb-3 tracking-widest text-sm">ISTRUZIONI PER LA RICHIESTA DI ACCESSO:</h3>
-                <ul class="text-gray-400 text-sm space-y-2 list-none text-center m-0 p-0">
+                <h3 class="text-[#005f9e] font-bold text-center mb-3 tracking-widest text-sm uppercase">Istruzioni per la richiesta di accesso:</h3>
+                <ul class="text-gray-400 text-sm space-y-2 list-none text-center m-0 p-0 leading-relaxed">
                     <li>Fornire <strong>Nome e Cognome</strong> reali.</li>
                     <li>Utilizzare un'<strong>Email Istituzionale</strong> o aziendale valida.</li>
-                    <li>Specificare <strong>Matricola</strong> o identificativo aziendale.</li>
-                    <li>Nelle <strong>Note</strong> inserire: preferenze, richieste di contatto dirette o estensioni di durata dell'accesso.</li>
+                    <li>Specificare <strong>Matricola</strong> o numero identificativo aziendale.</li>
+                    <li>Nelle <strong>Note</strong> inserire: preferenze, richieste di contatto dirette o aumento della durata dell'accesso.</li>
                 </ul>
             </div>
             
-            <form action="https://formspree.io/f/xlgapwrz" method="POST" class="space-y-6" id="registration-form">
+            <!-- Form con Endpoint Aggiornato -->
+            <form action="https://formspree.io/f/mqewragk" method="POST" class="space-y-6" id="registration-form">
                 <input type="hidden" name="_subject" value="Nuova Richiesta Accesso SIMRM">
                 
                 <div class="grid grid-cols-2 gap-4">
@@ -314,11 +312,11 @@
                 <input type="email" name="Email_Istituzionale" placeholder="Mail Istituzionale (es nome.cognome@studenti.unipd.it)" required class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                 
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="Matricola" placeholder="Matricola" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
-                    <input type="text" name="Università" placeholder="Università / Istituzione" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
+                    <input type="text" name="Matricola" placeholder="Matricola / ID Aziendale" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
+                    <input type="text" name="Università" placeholder="Università / Azienda" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                 </div>
 
-                <textarea name="Note" placeholder="Note (facoltativo)" rows="3" class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors resize-none"></textarea>
+                <textarea name="Note" placeholder="Note (preferenze, richieste contatto, estensioni durata...)" rows="3" class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors resize-none"></textarea>
                 
                 <div class="flex items-start gap-3 mt-4 border border-white/10 bg-[#161616] p-4 rounded-md">
                     <input type="checkbox" id="privacy-consent" name="Privacy_Consent" required class="mt-1 w-4 h-4 cursor-pointer accent-[#005f9e]">
@@ -425,13 +423,13 @@
                         headers: { 'Accept': 'application/json' }
                     });
                     if (r.ok) {
-                        status.innerHTML = "Richiesta inviata.";
+                        status.innerHTML = "Richiesta inviata con successo.";
                         status.className = "p-4 rounded-lg bg-green-900/30 text-green-400 block font-bold text-center";
                         form.reset();
                         submitBtn.disabled = true; 
                     } else { throw new Error(); }
                 } catch {
-                    status.innerHTML = "Errore invio.";
+                    status.innerHTML = "Si è verificato un errore. Riprova.";
                     status.className = "p-4 rounded-lg bg-red-900/30 text-red-400 block font-bold text-center";
                     submitBtn.disabled = !consentCheckbox.checked;
                 } finally {
