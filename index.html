@@ -12,7 +12,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono&display=swap');
 
         :root {
             --siemens-blue: #005f9e;
@@ -48,7 +48,6 @@
             background: radial-gradient(circle at center, #002b4d 0%, #0a0a0a 75%);
         }
 
-        /* Stile Custom per Video Autoplay */
         .video-container {
             position: relative;
             overflow: hidden;
@@ -71,7 +70,7 @@
 </head>
 <body>
 
-    <!-- Navigation -->
+    <!-- Navigazione -->
     <nav class="fixed w-full z-50 glass-panel px-6 py-4 flex justify-between items-center border-b border-[#262626]">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 bg-[#005f9e] rounded-sm flex items-center justify-center font-bold text-white text-xs">S</div>
@@ -125,7 +124,7 @@
         </div>
     </section>
 
-    <!-- Mission Section -->
+    <!-- Sezione Progetto -->
     <section id="mission" class="py-24 px-6 bg-[#0c0c0c] border-y border-[#1a1a1a]">
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
             <div data-aos="fade-right">
@@ -185,7 +184,7 @@
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Sezione Tecnologia -->
     <section id="features" class="py-24 px-6 bg-black">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16" data-aos="fade-up">
@@ -197,28 +196,28 @@
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="layers"></i>
                     </div>
-                    <h4 class="text-xl font-bold mb-3">Deep Resolve AI</h4>
+                    <h4 class="text-xl font-bold mb-3 uppercase">DEEP RAD.</h4>
                     <p class="text-sm text-gray-500">Simulazione kernel di ricostruzione IA. GAIN per incremento SNR e SHARP per ottimizzazione bordi.</p>
                 </div>
                 <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="100">
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="zap"></i>
                     </div>
-                    <h4 class="text-xl font-bold mb-3">3D SPACE & VFA</h4>
+                    <h4 class="text-xl font-bold mb-3 uppercase">3D SPC & VFA</h4>
                     <p class="text-sm text-gray-500">Treni ad angolo variabile (VFA) per riduzione SAR tramite angolo efficace (&alpha;<sub>RMS</sub>) di 50°.</p>
                 </div>
                 <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="200">
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="settings"></i>
                     </div>
-                    <h4 class="text-xl font-bold mb-3">Partial Fourier</h4>
+                    <h4 class="text-xl font-bold mb-3 italic">Partial Fourier</h4>
                     <p class="text-sm text-gray-500">Campionamento frazionario per riduzione TA, con gestione degradazione SNR proporzionale.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Physics Section -->
+    <!-- Sezione Fisica -->
     <section id="physics" class="py-24 px-6 bg-[#080808]">
         <div class="max-w-5xl mx-auto">
             <h2 class="text-3xl font-bold mb-8 italic border-l-4 border-[#005f9e] pl-6" data-aos="fade-right">Dinamiche del Segnale e Limiti Operativi</h2>
@@ -238,50 +237,46 @@
                     <ul class="space-y-4 text-gray-400 text-sm">
                         <li><strong class="text-white">Echo Spacing (ESP):</strong> Vincolato dalla BW; determina il TE minimo.</li>
                         <li><strong class="text-white">SAR Dinamico:</strong> Limiti normativi (3.2 W/kg Encefalo) con restrizioni rigide su TR/FA.</li>
-                        <li><strong class="text-white">GRAPPA:</strong> Riduzione TA con penalità SNR proporzionale a &radic;R.</li>
+                        <li><strong class="text-white uppercase font-bold tracking-tighter">GRP. PI.</strong> Riduzione TA con penalità SNR proporzionale a &radic;R.</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Gallery & Video Section -->
+    <!-- Galleria & Video -->
     <section id="gallery" class="py-24 px-6 bg-black flex flex-col items-center border-t border-[#1a1a1a]">
         <div class="max-w-6xl w-full">
             <h2 class="text-3xl font-bold mb-4 italic text-center" data-aos="fade-up">Interfaccia e Flusso di Lavoro</h2>
             <p class="text-gray-500 text-center mb-16" data-aos="fade-up">Esplora le sezioni del simulatore progettate per la didattica interattiva.</p>
 
-            <!-- Video Generale Autoplay -->
             <div class="w-full max-w-4xl mx-auto video-container mb-16 border border-[#005f9e]/30" data-aos="zoom-in" data-aos-duration="1000">
                  <div class="video-overlay"></div>
                  <div id="video-fallback-scroll" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0a] text-center p-6 z-0 hidden border border-dashed border-blue-900 m-2 rounded-xl">
                     <i data-lucide="video" class="w-10 h-10 text-[#005f9e] mb-3 opacity-50"></i>
                     <p class="text-white font-bold text-sm tracking-widest uppercase">Video non caricato</p>
-                    <p class="text-gray-500 text-xs font-mono">Assicurati che 'registrazione_generale.mp4' sia nel repository.</p>
                 </div>
                 <video id="mainVideo" autoplay loop muted playsinline controls class="w-full h-full object-cover relative z-10"
                        onerror="this.style.display='none'; document.getElementById('video-fallback-scroll').classList.remove('hidden');">
                     <source src="registrazione_generale.mp4" type="video/mp4">
-                    Il browser non supporta il video HTML5.
                 </video>
                  <div class="absolute bottom-4 left-4 z-30 bg-black/60 px-3 py-1 rounded text-xs font-mono text-blue-400 border border-blue-500/30 flex items-center gap-2 pointer-events-auto">
                     <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div> Preview Operativa
                 </div>
             </div>
 
-            <!-- Griglia Immagini -->
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="glass-panel rounded-xl overflow-hidden group" data-aos="fade-up">
                     <img src="contrast.png" alt="Contrasto" class="w-full relative z-10 transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/800x600/111/005f9e?text=Contrast+Panel'">
                     <div class="p-6 border-t border-[#262626] bg-[#0c0c0c]">
-                        <h4 class="font-bold text-[#00a0e3] mb-2">Pannello Contrasto</h4>
+                        <h4 class="font-bold text-[#00a0e3] mb-2 uppercase">Pannello Contrasto</h4>
                         <p class="text-sm text-gray-400">Regolazione di TR, TE e FA con feedback istantaneo.</p>
                     </div>
                 </div>
                 <div class="glass-panel rounded-xl overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
                     <img src="resolution-common.png" alt="Risoluzione" class="w-full relative z-10 transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/800x600/111/005f9e?text=Resolution+Panel'">
                     <div class="p-6 border-t border-[#262626] bg-[#0c0c0c]">
-                        <h4 class="font-bold text-[#00a0e3] mb-2">Geometria e Risoluzione</h4>
+                        <h4 class="font-bold text-[#00a0e3] mb-2 uppercase">Geometria e Risoluzione</h4>
                         <p class="text-sm text-gray-400">Controllo FOV e matrice per analisi voxel e SNR.</p>
                     </div>
                 </div>
@@ -289,10 +284,10 @@
         </div>
     </section>
 
-    <!-- Registration Section -->
+    <!-- Registrazione -->
     <section id="register" class="py-24 px-6 bg-[#0c0c0c] border-t border-white/5 relative">
         <div class="max-w-2xl mx-auto glass-panel p-10 rounded-3xl border-t-4 border-[#005f9e] relative z-10" data-aos="fade-up">
-            <h2 class="text-2xl font-bold mb-4 text-center uppercase tracking-widest siemens-font">Richiesta Accesso</h2>
+            <h2 class="text-2xl font-bold mb-4 text-center uppercase tracking-widest siemens-font italic">Richiesta Accesso</h2>
             <p class="text-gray-500 text-center mb-10 text-sm italic">Le registrazioni sono approvate manualmente. Inserisci i dati istituzionali.</p>
             
             <form action="https://formspree.io/f/xlgapwrz" method="POST" class="space-y-6" id="registration-form">
@@ -305,14 +300,12 @@
                 <input type="email" name="Email_Istituzionale" placeholder="Mail Istituzionale (es nome.cognome@studenti.unipd.it)" required class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                 
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="Matricola" placeholder="Matricola (Es. 1234567)" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
-                    <input type="text" name="Università" placeholder="Università di Padova" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
+                    <input type="text" name="Matricola" placeholder="Matricola" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
+                    <input type="text" name="Università" placeholder="Università" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                 </div>
 
-                <!-- Campo Note Aggiunto -->
                 <textarea name="Note" placeholder="Note (facoltativo)" rows="3" class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors resize-none"></textarea>
                 
-                <!-- Consenso GDPR -->
                 <div class="flex items-start gap-3 mt-4 border border-white/10 bg-[#161616] p-4 rounded-md">
                     <input type="checkbox" id="privacy-consent" name="Privacy_Consent" required class="mt-1 w-4 h-4 cursor-pointer accent-[#005f9e]">
                     <label for="privacy-consent" class="text-sm text-gray-400 cursor-pointer leading-tight">
@@ -334,39 +327,32 @@
     <footer class="py-12 px-6 bg-black border-t border-white/5 text-center">
         <div class="max-w-4xl mx-auto">
             
-            <!-- Disclaimer Scientifico Modificato -->
             <div class="mb-8 p-4 bg-red-900/10 border border-red-900/30 rounded-lg max-w-3xl mx-auto text-left">
                 <p class="text-xs text-red-400/80 leading-relaxed font-mono">
                     Il simulatore ha scopi esclusivamente didattici. I dati prodotti (SAR, SNR, TA) sono simulazioni algoritmiche e non devono essere utilizzati per pianificazioni cliniche su pazienti reali.
                 </p>
             </div>
 
-            <!-- Link Legali Iubenda -->
             <div class="flex justify-center gap-6 mb-6 text-sm">
                 <a href="https://www.iubenda.com/privacy-policy/85386503" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Privacy Policy ">Privacy Policy</a>
-                <script type="text/javascript">
-                    (function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; if(tag){tag.parentNode.insertBefore(s,tag);}else{d.head.appendChild(s);}}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);
-                </script>
+                <script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
                 
                 <span class="text-gray-700">|</span>
                 
                 <a href="https://www.iubenda.com/privacy-policy/85386503/cookie-policy" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Cookie Policy ">Cookie Policy</a>
-                <script type="text/javascript">
-                    (function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; if(tag){tag.parentNode.insertBefore(s,tag);}else{d.head.appendChild(s);}}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);
-                </script>
+                <script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
             </div>
 
-            <p class="text-gray-400 mb-4">Sviluppato da <span class="text-white font-bold italic">Francesco Fugaro</span></p>
+            <p class="text-gray-400 mb-4 tracking-tighter uppercase font-bold text-xs">Sviluppato da <span class="text-white font-black italic">Francesco Fugaro</span></p>
             
-            <!-- Bottone Citazione (Evidenziato) -->
             <button onclick="toggleCitationModal()" class="mb-6 text-xs font-semibold border border-[#005f9e]/50 bg-[#005f9e]/10 px-4 py-2 rounded hover:bg-[#005f9e]/30 hover:text-white transition-colors uppercase tracking-widest text-gray-300">
                 Citazione
             </button>
 
             <div class="text-[10px] text-gray-600 uppercase tracking-widest space-y-2">
                 <div class="flex justify-center gap-8 mt-2">
-                    <a href="https://github.com/leoliuf/MRiLab.git" target="_blank" class="hover:text-blue-500 transition-colors">Head: MriLab</a>
-                    <a href="https://zenodo.org/records/3431873" target="_blank" class="hover:text-blue-500 transition-colors">Abdomen: CHAOS Challenge</a>
+                    <a href="https://github.com/leoliuf/MRiLab.git" target="_blank" class="hover:text-blue-500 transition-colors uppercase">Head: MriLab</a>
+                    <a href="https://zenodo.org/records/3431873" target="_blank" class="hover:text-blue-500 transition-colors uppercase">Abdomen: CHAOS Challenge</a>
                 </div>
                 <p class="pt-8 opacity-50">© 2024-2026 SIMRM Project. Riproduzione vietata senza autorizzazione.</p>
             </div>
@@ -389,13 +375,12 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripting -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         lucide.createIcons();
         AOS.init({ duration: 800, once: true });
 
-        // Logica validazione GDPR Form
         const consentCheckbox = document.getElementById('privacy-consent');
         const submitBtn = document.getElementById('submit-btn');
 
@@ -405,7 +390,6 @@
             });
         }
 
-        // Formspree Handler
         const form = document.getElementById("registration-form");
         const status = document.getElementById("form-status");
 
@@ -413,8 +397,7 @@
             form.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Invio...';
-                status.className = "hidden";
+                submitBtn.innerHTML = 'Invio...';
                 
                 const formData = new FormData(form);
                 if (!formData.get('Note') || formData.get('Note').trim() === '') {
@@ -428,78 +411,47 @@
                         headers: { 'Accept': 'application/json' }
                     });
                     if (r.ok) {
-                        status.innerHTML = "Richiesta inviata con successo! Verificheremo i tuoi dati a breve.";
-                        status.className = "p-4 rounded-lg bg-green-900/30 text-green-400 border border-green-500/50 block font-bold text-center";
+                        status.innerHTML = "Richiesta inviata.";
+                        status.className = "p-4 rounded-lg bg-green-900/30 text-green-400 block font-bold text-center";
                         form.reset();
-                        // Reset stato bottone post invio con successo
                         submitBtn.disabled = true; 
                     } else { throw new Error(); }
                 } catch {
-                    status.innerHTML = "Errore durante l'invio. Verifica i dati o riprova più tardi.";
-                    status.className = "p-4 rounded-lg bg-red-900/30 text-red-400 border border-red-500/50 block font-bold text-center";
-                    // Riabilita bottone se c'è errore e la checkbox è attiva
+                    status.innerHTML = "Errore invio.";
+                    status.className = "p-4 rounded-lg bg-red-900/30 text-red-400 block font-bold text-center";
                     submitBtn.disabled = !consentCheckbox.checked;
                 } finally {
                     submitBtn.innerHTML = 'Invia Richiesta Registrazione';
-                    lucide.createIcons();
                 }
             });
         }
         
-        // Logica Modale Citazione
         function toggleCitationModal() {
             const m = document.getElementById('citation-modal');
             const c = document.getElementById('citation-modal-content');
             if (m.classList.contains('hidden')) {
                 m.classList.remove('hidden'); 
-                void m.offsetWidth; // Force reflow
-                m.classList.remove('opacity-0'); 
-                c.classList.remove('scale-95');
+                setTimeout(() => { m.classList.remove('opacity-0'); c.classList.remove('scale-95'); }, 10);
             } else {
-                m.classList.add('opacity-0'); 
-                c.classList.add('scale-95'); 
-                setTimeout(() => {
-                    m.classList.add('hidden');
-                    const btn = document.getElementById('copy-btn');
-                    btn.innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i> Copia Testo';
-                    lucide.createIcons();
-                }, 300);
+                m.classList.add('opacity-0'); c.classList.add('scale-95'); 
+                setTimeout(() => m.classList.add('hidden'), 300);
             }
         }
 
-        // Logica Copia Citazione
         function copyCitation() {
-            const citationText = "Fugaro, F. (2026). SIMRM: Simulatore di Sequenze di Risonanza Magnetica. https://simrmportal.vercel.app/";
-            navigator.clipboard.writeText(citationText).then(() => {
-                const btn = document.getElementById('copy-btn');
-                btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-500"></i> Copiato!';
-                lucide.createIcons();
-            }).catch(err => {
-                console.error("Errore durante la copia:", err);
+            const text = "Fugaro, F. (2026). SIMRM: Simulatore di Sequenze di Risonanza Magnetica. https://simrmportal.vercel.app/";
+            navigator.clipboard.writeText(text).then(() => {
+                document.getElementById('copy-btn').innerHTML = 'Copiato!';
             });
         }
-        
-        // Autoplay Video
+
         document.addEventListener("DOMContentLoaded", function() {
-            const videoElement = document.getElementById('mainVideo');
-            if(videoElement) {
-                videoElement.style.opacity = '0';
-                videoElement.style.transition = 'opacity 1s ease-in-out';
-                
+            const video = document.getElementById('mainVideo');
+            if(video) {
                 const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            videoElement.play().then(() => {
-                                videoElement.style.opacity = '1';
-                            }).catch(e => console.log("Autoplay policy error."));
-                        } else {
-                            videoElement.pause();
-                            videoElement.style.opacity = '0';
-                        }
-                    });
-                }, { threshold: 0.3 });
-                
-                observer.observe(videoElement);
+                    entries.forEach(entry => entry.isIntersecting ? video.play() : video.pause());
+                }, { threshold: 0.1 });
+                observer.observe(video);
             }
         });
     </script>
