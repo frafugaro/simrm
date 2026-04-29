@@ -15,7 +15,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono&display=swap');
 
         :root {
-            --siemens-blue: #005f9e;
+            --simrm-blue: #005f9e;
             --space-gray: #121212;
             --accent-blue: #0076c0;
         }
@@ -27,7 +27,7 @@
             /* L'overflow-x-hidden viene gestito dinamicamente via JS post-intro */
         }
 
-        .siemens-font {
+        .simrm-font {
             font-family: 'Inter', sans-serif;
             letter-spacing: -0.07em;
         }
@@ -131,7 +131,7 @@
             </div>
             
             <!-- Testo SIMRM -->
-            <div class="absolute text-[70px] md:text-[120px] font-black siemens-font text-white leading-none animate-intro-text z-30 flex items-center drop-shadow-2xl">
+            <div class="absolute text-[70px] md:text-[120px] font-black simrm-font text-white leading-none animate-intro-text z-30 flex items-center drop-shadow-2xl">
                 SIM<span class="blue-gradient-text">RM</span>
             </div>
         </div>
@@ -141,7 +141,7 @@
     <nav class="fixed w-full z-50 glass-panel px-6 py-4 flex justify-between items-center border-b border-[#262626]">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 bg-[#005f9e] rounded flex items-center justify-center font-bold text-white text-sm border-t border-white/20">S</div>
-            <span class="text-2xl font-black siemens-font text-white mt-1">SIM<span class="text-[#005f9e]">RM</span></span>
+            <span class="text-2xl font-black simrm-font text-white mt-1">SIM<span class="text-[#005f9e]">RM</span></span>
         </div>
         
         <div class="flex items-center gap-8">
@@ -163,6 +163,10 @@
                 <i data-lucide="user" class="w-4 h-4"></i> Contatti
             </button>
             <div class="w-full h-px bg-white/10"></div>
+            <button onclick="toggleModal('tos-modal')" class="text-left text-sm font-bold text-gray-300 hover:text-[#00a0e3] uppercase tracking-widest transition-colors flex items-center gap-3">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i> Termini di Servizio
+            </button>
+            <div class="w-full h-px bg-white/10"></div>
             <button onclick="toggleModal('feedback-modal')" class="text-left text-sm font-bold text-gray-300 hover:text-[#00a0e3] uppercase tracking-widest transition-colors flex items-center gap-3">
                 <i data-lucide="message-square" class="w-4 h-4"></i> Feedback
             </button>
@@ -177,7 +181,7 @@
         </div>
 
         <div class="text-center z-10 pt-20" data-aos="fade-up" data-aos-duration="1000">
-            <h1 class="text-[70px] md:text-[120px] font-black siemens-font text-white leading-none mb-6">
+            <h1 class="text-[70px] md:text-[120px] font-black simrm-font text-white leading-none mb-6">
                 SIM<span class="blue-gradient-text">RM</span>
             </h1>
 
@@ -213,7 +217,7 @@
     <section id="mission" class="py-24 px-6 bg-[#0c0c0c] border-y border-[#1a1a1a]">
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
             <div data-aos="fade-right">
-                <h2 class="text-3xl font-bold mb-6 siemens-font flex items-center gap-3">
+                <h2 class="text-3xl font-bold mb-6 simrm-font flex items-center gap-3">
                     <span class="w-8 h-1 bg-[#005f9e]"></span> Il Progetto
                 </h2>
                 <div class="space-y-4 text-gray-400 leading-relaxed">
@@ -372,7 +376,7 @@
     <!-- Registrazione -->
     <section id="register" class="py-24 px-6 bg-[#0c0c0c] border-t border-white/5 relative">
         <div class="max-w-2xl mx-auto glass-panel p-10 rounded-3xl border-t-4 border-[#005f9e] relative z-10" data-aos="fade-up">
-            <h2 class="text-2xl font-bold mb-6 text-center uppercase tracking-widest siemens-font italic">Richiesta Accesso</h2>
+            <h2 class="text-2xl font-bold mb-6 text-center uppercase tracking-widest simrm-font italic">Richiesta Accesso</h2>
             
             <div class="bg-[#111111] border border-white/10 p-5 rounded-xl mb-8">
                 <h3 class="text-[#005f9e] font-bold text-center mb-3 tracking-widest text-sm uppercase">Istruzioni per la richiesta di accesso:</h3>
@@ -429,11 +433,11 @@
 
             <!-- MODIFICA IUBENDA APPLICATA QUI -->
             <div class="flex justify-center gap-6 mb-6 text-sm">
-                <a href="https://www.iubenda.com/privacy-policy/85386503" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Privacy Policy">Privacy Policy</a>
+                <a href="https://www.iubenda.com/privacy-policy/85386503" class="iubenda-black iubenda-noiframe iubenda-embed" title="Privacy Policy ">Privacy Policy</a><script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
                 
                 <span class="text-gray-700">|</span>
                 
-                <a href="https://www.iubenda.com/privacy-policy/85386503/cookie-policy" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Cookie Policy">Cookie Policy</a>
+                <a href="https://www.iubenda.com/privacy-policy/85386503/cookie-policy" class="iubenda-black iubenda-noiframe iubenda-embed" title="Cookie Policy ">Cookie Policy</a><script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
             </div>
 
             <p class="text-gray-400 mb-4 tracking-tighter uppercase font-bold text-xs">Sviluppato da <span class="text-white font-black italic">Francesco Fugaro</span></p>
@@ -483,9 +487,26 @@
                     <p class="text-lg font-bold text-gray-200">FRANCESCO FUGARO</p>
                 </div>
                 <div>
-                    <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Email Istituzionale</p>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Email di Contatto</p>
                     <a href="mailto:simrm.portal@gmail.com" class="text-base font-mono text-[#00a0e3] hover:underline">simrm.portal@gmail.com</a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tos-modal" class="fixed inset-0 z-[60] hidden flex justify-center items-center bg-black/80 opacity-0 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-md mx-4 p-8 rounded-3xl border-t-4 border-red-900/80 transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-start mb-6">
+                <div class="w-12 h-12 bg-red-900/30 rounded-full flex items-center justify-center text-red-500">
+                    <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                </div>
+                <button onclick="toggleModal('tos-modal')" class="focus:outline-none"><i data-lucide="x" class="w-5 h-5 text-gray-400 hover:text-white"></i></button>
+            </div>
+            <h3 class="text-2xl font-black text-white uppercase tracking-tighter mb-2 italic">Termini di Servizio</h3>
+            <div class="space-y-4 mt-6 border-t border-white/10 pt-6 text-sm text-gray-400 leading-relaxed">
+                <p>L'accesso al simulatore SIMRM è soggetto a <strong>totale discrezionalità</strong> da parte dell'amministratore del sistema.</p>
+                <p>Ci riserviamo il diritto insindacabile di <strong>accettare o rifiutare</strong> qualsiasi richiesta di registrazione senza obbligo di motivazione.</p>
+                <p>L'account utente, anche se precedentemente approvato, può essere <strong>revocato o sospeso in qualsiasi momento e senza alcun preavviso</strong> in applicazione della presente clausola di discrezionalità.</p>
             </div>
         </div>
     </div>
