@@ -427,14 +427,13 @@
                 </p>
             </div>
 
+            <!-- MODIFICA IUBENDA APPLICATA QUI -->
             <div class="flex justify-center gap-6 mb-6 text-sm">
-                <a href="https://www.iubenda.com/privacy-policy/85386503" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Privacy Policy ">Privacy Policy</a>
-                <script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
+                <a href="https://www.iubenda.com/privacy-policy/85386503" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Privacy Policy">Privacy Policy</a>
                 
                 <span class="text-gray-700">|</span>
                 
-                <a href="https://www.iubenda.com/privacy-policy/85386503/cookie-policy" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Cookie Policy ">Cookie Policy</a>
-                <script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
+                <a href="https://www.iubenda.com/privacy-policy/85386503/cookie-policy" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Cookie Policy">Cookie Policy</a>
             </div>
 
             <p class="text-gray-400 mb-4 tracking-tighter uppercase font-bold text-xs">Sviluppato da <span class="text-white font-black italic">Francesco Fugaro</span></p>
@@ -522,16 +521,12 @@
             mirror: true  
         });
 
-        /* GESTIONE SBLOCCO SCROLL DOPO INTRO 
-         * Timeout aumentato per coincidere con la fine della nuova transizione translateY
-         */
         setTimeout(() => {
             const body = document.getElementById('main-body');
             body.classList.remove('overflow-hidden');
             body.classList.add('overflow-x-hidden');
         }, 4400); 
 
-        // GESTIONE HAMBURGER MENU
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const hamburgerDropdown = document.getElementById('hamburger-dropdown');
 
@@ -546,7 +541,6 @@
             }
         });
 
-        // GESTIONE UNIVERSALE MODALI
         function toggleModal(modalID) {
             const m = document.getElementById(modalID);
             const content = m.querySelector('.glass-panel');
@@ -650,5 +644,7 @@
             });
         }
     </script>
+    <!-- Script Iubenda consolidato a fine body -->
+    <script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
 </body>
 </html>
