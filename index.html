@@ -456,7 +456,7 @@
                 </ul>
             </div>
             
-            <form class="space-y-6" id="registration-form">
+            <form class="space-y-6" id="registration-form" onsubmit="event.preventDefault();">
                 <div class="grid grid-cols-2 gap-4">
                     <input type="text" name="Nome" placeholder="Nome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                     <input type="text" name="Cognome" placeholder="Cognome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
@@ -827,6 +827,26 @@
 
     <!-- Script Gestione Dati (Bloccato da Klaro! fino a consenso) -->
     <script type="text/plain" data-type="application/javascript" data-name="formspree">
+        // Algoritmo di calcolo Hash SHA-256 (Zero Knowledge Locale)
+        async function digestMessage(message) {
+            const msgUint8 = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Generatore Token CSRNG
+        function generateRandomToken(length) {
+            const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let token = "";
+            const randomValues = new Uint32Array(length);
+            window.crypto.getRandomValues(randomValues);
+            for (let i = 0; i < length; i++) {
+                token += charset[randomValues[i] % charset.length];
+            }
+            return token;
+        }
+
         const regForm = document.getElementById("registration-form");
         const regStatus = document.getElementById("form-status");
         const regSubmitBtn = document.getElementById('submit-btn');
@@ -836,7 +856,7 @@
             regForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 regSubmitBtn.disabled = true;
-                regSubmitBtn.innerHTML = 'Invio...';
+                regSubmitBtn.innerHTML = 'Generazione Token...';
                 
                 const formData = new FormData(regForm);
                 const valoreNome = formData.get('Nome');
@@ -847,8 +867,14 @@
                 
                 const data_scadenza = new Date();
                 data_scadenza.setMonth(data_scadenza.getMonth() + 6);
+
+                let clearToken = generateRandomToken(8);
                 
                 try {
+                    const tokenHash = await digestMessage(clearToken);
+                    
+                    regSubmitBtn.innerHTML = 'Connessione al Database...';
+                    
                     const { data, error } = await supabase
                         .from('accessi_utenti')
                         .insert([
@@ -858,20 +884,25 @@
                                 email: valoreEmail, 
                                 matricola: valoreMatricola, 
                                 istituzione: valoreIstituzione,
-                                data_scadenza: data_scadenza.toISOString()
+                                data_scadenza: data_scadenza.toISOString(),
+                                token_hash: tokenHash
                             }
                         ]);
 
                     if (error) throw error;
 
-                    regStatus.innerHTML = "Richiesta inviata. Riceverai le credenziali d'accesso via email al termine delle verifiche accademiche.";
+                    alert(`Richiesta registrata. Il tuo codice univoco di accesso è: ${clearToken}\n\nSALVALO SUBITO: questo codice non sarà più visibile, nemmeno all'amministratore. Lo potrai usare solo dopo che la tua matricola sarà stata validata.`);
+                    
+                    regStatus.innerHTML = "Richiesta completata. Attendi la validazione accademica.";
                     regStatus.className = "p-4 rounded-lg bg-green-900/30 text-green-400 block font-bold text-center";
                     regForm.reset();
+
                 } catch (error) {
                     regStatus.innerHTML = "Errore durante l'invio: " + (error.message || "Riprova più tardi.");
                     regStatus.className = "p-4 rounded-lg bg-red-900/30 text-red-400 block font-bold text-center text-xs";
                     regSubmitBtn.disabled = !regConsentBox.checked;
                 } finally {
+                    clearToken = null; // Eliminazione coercitiva del token in chiaro dalla memoria
                     regSubmitBtn.innerHTML = 'Invia Richiesta Registrazione';
                 }
             });
