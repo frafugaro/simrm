@@ -456,7 +456,7 @@
                 </ul>
             </div>
             
-            <form class="space-y-6" id="registration-form" onsubmit="event.preventDefault();">
+            <form class="space-y-6" id="registration-form">
                 <div class="grid grid-cols-2 gap-4">
                     <input type="text" name="Nome" placeholder="Nome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                     <input type="text" name="Cognome" placeholder="Cognome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
@@ -825,8 +825,8 @@
         }
     </script>
 
-    <!-- Script Gestione Dati (Bloccato da Klaro! fino a consenso) -->
-    <script type="text/plain" data-type="application/javascript" data-name="formspree">
+    <!-- Script Gestione Dati Supabase -->
+    <script>
         // Algoritmo di calcolo Hash SHA-256 (Zero Knowledge Locale)
         async function digestMessage(message) {
             const msgUint8 = new TextEncoder().encode(message);
@@ -853,27 +853,25 @@
         const regConsentBox = document.getElementById('privacy-consent');
 
         if(regForm && regStatus) {
-            regForm.addEventListener("submit", async (e) => {
-                e.preventDefault();
+            regForm.addEventListener("submit", async (event) => {
+                event.preventDefault(); // Blocco immediato del refresh nativo
+                
                 regSubmitBtn.disabled = true;
-                regSubmitBtn.innerHTML = 'Generazione Token...';
-                
-                const formData = new FormData(regForm);
-                const valoreNome = formData.get('Nome');
-                const valoreCognome = formData.get('Cognome');
-                const valoreEmail = formData.get('Email_Istituzionale');
-                const valoreMatricola = formData.get('Matricola');
-                const valoreIstituzione = formData.get('Università');
-                
-                const data_scadenza = new Date();
-                data_scadenza.setMonth(data_scadenza.getMonth() + 6);
-
-                let clearToken = generateRandomToken(8);
+                regSubmitBtn.innerHTML = 'Invio in corso...';
                 
                 try {
-                    const tokenHash = await digestMessage(clearToken);
+                    const formData = new FormData(regForm);
+                    const valoreNome = formData.get('Nome');
+                    const valoreCognome = formData.get('Cognome');
+                    const valoreEmail = formData.get('Email_Istituzionale');
+                    const valoreMatricola = formData.get('Matricola');
+                    const valoreIstituzione = formData.get('Università');
                     
-                    regSubmitBtn.innerHTML = 'Connessione al Database...';
+                    const data_scadenza = new Date();
+                    data_scadenza.setMonth(data_scadenza.getMonth() + 6);
+
+                    let clearToken = generateRandomToken(8);
+                    const tokenHash = await digestMessage(clearToken);
                     
                     const { data, error } = await supabase
                         .from('accessi_utenti')
@@ -891,18 +889,23 @@
 
                     if (error) throw error;
 
-                    alert(`Richiesta registrata. Il tuo codice univoco di accesso è: ${clearToken}\n\nSALVALO SUBITO: questo codice non sarà più visibile, nemmeno all'amministratore. Lo potrai usare solo dopo che la tua matricola sarà stata validata.`);
+                    alert(`RICHIESTA REGISTRATA! Il tuo codice di accesso è: ${clearToken}\n\nSalvalo ora: non è memorizzato nel database e non potremo recuperarlo.`);
+                    clearToken = null; // Eliminazione coercitiva del token in chiaro dalla memoria
                     
                     regStatus.innerHTML = "Richiesta completata. Attendi la validazione accademica.";
                     regStatus.className = "p-4 rounded-lg bg-green-900/30 text-green-400 block font-bold text-center";
                     regForm.reset();
 
                 } catch (error) {
-                    regStatus.innerHTML = "Errore durante l'invio: " + (error.message || "Riprova più tardi.");
+                    let errorMsg = error.message || "Riprova più tardi.";
+                    if (error.code === '23505') { // Errore di violazione vincolo UNIQUE in PostgreSQL
+                        errorMsg = "L'email o la matricola inserita risulta già registrata a sistema.";
+                    }
+                    regStatus.innerHTML = "Errore durante l'invio: " + errorMsg;
                     regStatus.className = "p-4 rounded-lg bg-red-900/30 text-red-400 block font-bold text-center text-xs";
-                    regSubmitBtn.disabled = !regConsentBox.checked;
                 } finally {
-                    clearToken = null; // Eliminazione coercitiva del token in chiaro dalla memoria
+                    if(!regConsentBox.checked) regSubmitBtn.disabled = true;
+                    else regSubmitBtn.disabled = false;
                     regSubmitBtn.innerHTML = 'Invia Richiesta Registrazione';
                 }
             });
