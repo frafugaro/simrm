@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="it" class="scroll-smooth">
 <head>
-    <script type="text/javascript" src="https://embeds.iubenda.com/widgets/6634fecc-d5ec-481f-bad3-926527e3c25e.js"></script>
+    <!-- Klaro! Consent Manager -->
+    <script src="https://api.kiprotect.com/v1/privacy-managers/1311bd79570d850cfa223a8631a71cc6/klaro.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIMRM - Simulatore di Sequenze 2D e 3D</title>
@@ -24,7 +26,6 @@
             background-color: #0a0a0a;
             color: #e5e7eb;
             font-family: 'Inter', sans-serif;
-            /* L'overflow-x-hidden viene gestito dinamicamente via JS post-intro */
         }
 
         .simrm-font {
@@ -79,13 +80,11 @@
 
         /* --- ANIMAZIONI INTRO SPLASH --- */
         #intro-splash {
-            /* Transizione cinetica: spostamento fisico verso l'alto */
             animation: splashSweep 1.2s cubic-bezier(0.85, 0, 0.15, 1) forwards 3.2s;
             will-change: transform;
         }
         
         .animate-intro-box {
-            /* Sovraffazione fisica: il blocco esplode nelle dimensioni e scompare */
             animation: boxExplode 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             will-change: transform, opacity;
         }
@@ -100,7 +99,7 @@
             0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
             20% { transform: scale(1); opacity: 1; filter: blur(0px); }
             60% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
-            100% { transform: scale(25); opacity: 0; filter: blur(20px); } /* Override drastico */
+            100% { transform: scale(25); opacity: 0; filter: blur(20px); } 
         }
         
         @keyframes textFocus {
@@ -118,19 +117,16 @@
 
     <!-- INTRO SPLASH SCREEN -->
     <div id="intro-splash" class="fixed inset-0 z-[100] bg-[#0a0a0a] hero-bg flex flex-col justify-center items-center">
-        <!-- Background Glows -->
         <div class="absolute inset-0 opacity-20 pointer-events-none flex justify-center items-center z-0">
             <div class="absolute w-96 h-96 bg-blue-600 rounded-full filter blur-[120px] transform -translate-x-1/2 -translate-y-1/4"></div>
             <div class="absolute w-96 h-96 bg-blue-900 rounded-full filter blur-[120px] transform translate-x-1/2 translate-y-1/4"></div>
         </div>
         
         <div class="relative z-10 flex items-center justify-center w-full h-64">
-            <!-- Box 'S' -->
             <div class="absolute w-32 h-32 bg-[#005f9e] rounded-xl flex items-center justify-center font-bold text-white text-6xl animate-intro-box z-20 shadow-[0_0_50px_rgba(0,95,158,0.8)]">
                 S
             </div>
             
-            <!-- Testo SIMRM -->
             <div class="absolute text-[70px] md:text-[120px] font-black simrm-font text-white leading-none animate-intro-text z-30 flex items-center drop-shadow-2xl">
                 SIM<span class="blue-gradient-text">RM</span>
             </div>
@@ -408,7 +404,7 @@
                     <input type="checkbox" id="privacy-consent" name="Privacy_Consent" required class="mt-1 w-4 h-4 cursor-pointer accent-[#005f9e]">
                     <label for="privacy-consent" class="text-sm text-gray-400 cursor-pointer leading-tight">
                         Accetto la 
-                        <a href="https://www.iubenda.com/privacy-policy/85386503" class="iubenda-black iubenda-noiframe iubenda-embed text-[#00a0e3] hover:underline" title="Privacy Policy">Privacy Policy</a>
+                        <button type="button" onclick="toggleModal('privacy-modal')" class="text-[#00a0e3] hover:underline focus:outline-none" title="Apri Privacy Policy">Privacy Policy</button>
                     </label>
                 </div>
 
@@ -431,13 +427,11 @@
                 </p>
             </div>
 
-            <!-- MODIFICA IUBENDA APPLICATA QUI -->
             <div class="flex justify-center gap-6 mb-6 text-sm">
-                <a href="https://www.iubenda.com/privacy-policy/58481308" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Privacy Policy">Privacy Policy</a>
-                
+                <button onclick="toggleModal('privacy-modal')" class="text-gray-500 hover:text-white transition-colors focus:outline-none" title="Leggi la Privacy Policy">Privacy Policy</button>
                 <span class="text-gray-700">|</span>
-                
-                <a href="https://www.iubenda.com/privacy-policy/58481308/cookie-policy" class="iubenda-black iubenda-noiframe iubenda-embed text-gray-500 hover:text-white transition-colors" title="Cookie Policy">Cookie Policy</a>
+                <!-- Collegamento di default Klaro per riaprire le preferenze cookie -->
+                <button onclick="if(window.klaro) klaro.show();" class="text-gray-500 hover:text-white transition-colors focus:outline-none" title="Gestisci Preferenze Cookie">Gestione Cookie</button>
             </div>
 
             <p class="text-gray-400 mb-4 tracking-tighter uppercase font-bold text-xs">Sviluppato da <span class="text-white font-black italic">Francesco Fugaro</span></p>
@@ -457,6 +451,95 @@
     </footer>
 
     <!-- OVERLAYS: MODALS -->
+    <!-- Privacy Policy Modale (Nuovo) -->
+    <div id="privacy-modal" class="fixed inset-0 z-[70] hidden flex justify-center items-center bg-black/80 opacity-0 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-3xl mx-4 p-8 rounded-3xl border-t-4 border-[#00a0e3] transform scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4 shrink-0">
+                <h3 class="font-bold text-white text-lg uppercase tracking-widest italic flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-[#00a0e3]"></i> Privacy Policy
+                </h3>
+                <button onclick="toggleModal('privacy-modal')" class="focus:outline-none"><i data-lucide="x" class="w-6 h-6 text-gray-400 hover:text-white"></i></button>
+            </div>
+            
+            <!-- Contenuto Scorrevole GDPR -->
+            <div class="overflow-y-auto pr-4 text-sm text-gray-300 space-y-4 leading-relaxed custom-scrollbar">
+                <h4 class="text-white font-bold uppercase tracking-widest mb-1">INFORMATIVA SUL TRATTAMENTO DEI DATI PERSONALI (GDPR)</h4>
+                <p class="italic text-xs text-gray-500 mb-6">Ultimo aggiornamento: 30 aprile 2026</p>
+                
+                <p>La presente Informativa descrive come vengono raccolti, utilizzati e protetti i dati personali degli utenti che accedono al portale SimRM (https://simrmportal.vercel.app/). Il trattamento è improntato ai principi di correttezza, liceità, trasparenza e tutela della riservatezza.</p>
+                
+                <h5 class="text-[#00a0e3] font-bold mt-6">1. TITOLARE DEL TRATTAMENTO</h5>
+                <p>Il Titolare del trattamento è:<br>
+                <strong>Nome:</strong> Francesco Fugaro<br>
+                <strong>Indirizzo:</strong> Via Vicenza, 14 – 39100 Bolzano (BZ), Italia<br>
+                <strong>Contatto email:</strong> <a href="mailto:simrm.portal@gmail.com" class="text-[#00a0e3] hover:underline">simrm.portal@gmail.com</a></p>
+
+                <h5 class="text-[#00a0e3] font-bold mt-6">2. TIPOLOGIA DI DATI RACCOLTI</h5>
+                <p>Per l'erogazione del servizio di simulazione e la gestione delle autorizzazioni di accesso, vengono raccolti i seguenti dati:</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Dati Identificativi:</strong> Nome, Cognome.</li>
+                    <li><strong>Dati di Contatto:</strong> Indirizzo e-mail.</li>
+                    <li><strong>Dati Professionali/Accademici:</strong> Numero di matricola o identificativo aziendale, Università o Azienda di appartenenza.</li>
+                    <li><strong>Dati di Navigazione:</strong> Indirizzo IP, log di sistema e dati tecnici forniti dall'infrastruttura di hosting.</li>
+                </ul>
+
+                <h5 class="text-[#00a0e3] font-bold mt-6">3. FINALITÀ DEL TRATTAMENTO E BASE GIURIDICA</h5>
+                <p>I dati sono trattati esclusivamente per le seguenti finalità:</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Verifica e Autenticazione:</strong> Valutazione della richiesta di accesso al simulatore basata sull'affiliazione istituzionale (Base giuridica: Esecuzione di un contratto o misure precontrattuali).</li>
+                    <li><strong>Erogazione del Servizio:</strong> Utilizzo delle funzionalità del simulatore RM (Base giuridica: Consenso dell'interessato).</li>
+                    <li><strong>Sicurezza:</strong> Monitoraggio degli accessi per prevenire abusi o attacchi informatici (Base giuridica: Legittimo interesse del Titolare).</li>
+                </ul>
+
+                <h5 class="text-[#00a0e3] font-bold mt-6">4. MODALITÀ DI TRATTAMENTO E CONSERVAZIONE</h5>
+                <p>Il trattamento viene effettuato con strumenti elettronici.</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Hosting:</strong> Il sito è ospitato sulla piattaforma Vercel (Vercel Inc.). I dati risiedono su server che garantiscono elevati standard di sicurezza.</li>
+                    <li><strong>Periodo di conservazione:</strong> I dati saranno conservati per il tempo strettamente necessario all'erogazione del servizio o fino alla richiesta di cancellazione da parte dell'utente. In caso di inattività prolungata, il Titolare si riserva il diritto di eliminare l'account e i dati associati.</li>
+                </ul>
+
+                <h5 class="text-[#00a0e3] font-bold mt-6">5. COMUNICAZIONE DEI DATI A TERZI</h5>
+                <p>I dati raccolti non vengono venduti né ceduti a terzi per scopi di marketing. La comunicazione avviene esclusivamente verso:</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Sistemi di Pagamento/Donazione:</strong> In caso di donazione volontaria tramite PayPal (paypal.me/simrm), i dati relativi alla transazione sono gestiti esclusivamente da PayPal Holdings, Inc. Il Titolare riceve solo le informazioni necessarie a confermare la ricezione della liberalità.</li>
+                    <li><strong>Autorità competenti:</strong> Qualora richiesto per obblighi di legge.</li>
+                </ul>
+
+                <h5 class="text-[#00a0e3] font-bold mt-6">6. TRASFERIMENTO DATI EXTRA-UE</h5>
+                <p>L'utilizzo di infrastrutture come Vercel e PayPal può comportare il trasferimento di dati verso server situati negli Stati Uniti. Tale trasferimento avviene in conformità alle clausole contrattuali standard (SCC) e agli accordi internazionali vigenti (Data Privacy Framework).</p>
+
+                <h5 class="text-[#00a0e3] font-bold mt-6">7. DIRITTI DELL’INTERESSATO (Artt. 15-22 GDPR)</h5>
+                <p>L'utente può esercitare in qualsiasi momento i seguenti diritti scrivendo a simrm.portal@gmail.com:</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Accesso:</strong> Chiedere conferma se sia o meno in corso un trattamento di dati.</li>
+                    <li><strong>Rettifica:</strong> Chiedere la correzione di dati inesatti.</li>
+                    <li><strong>Cancellazione (Diritto all'oblio):</strong> Chiedere la rimozione dei propri dati dal database.</li>
+                    <li><strong>Limitazione:</strong> Chiedere di limitare il trattamento in casi specifici.</li>
+                    <li><strong>Portabilità:</strong> Ricevere i dati in un formato strutturato.</li>
+                </ul>
+                <p>L'interessato ha inoltre il diritto di proporre reclamo all'Autorità Garante per la Protezione dei Dati Personali (www.garanteprivacy.it).</p>
+
+                <h5 class="text-[#00a0e3] font-bold mt-6">8. DISCLAIMER LEGALE E RESPONSABILITÀ</h5>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li>SimRM è un simulatore a esclusivo scopo didattico e di ricerca.</li>
+                    <li>I risultati delle simulazioni non hanno valore diagnostico, clinico o medico.</li>
+                    <li>L'utente è l'unico responsabile dell'interpretazione dei dati generati.</li>
+                    <li>Il Titolare non risponde di eventuali danni derivanti da un uso improprio o clinico del software.</li>
+                </ul>
+
+                <h5 class="text-[#00a0e3] font-bold mt-6">9. COOKIE E TRACCIAMENTO</h5>
+                <p>Il sito utilizza esclusivamente cookie tecnici necessari al funzionamento della piattaforma e cookie analitici anonimizzati forniti dall'hosting. Non viene effettuata profilazione a fini commerciali.</p>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-white/10 shrink-0">
+                <button onclick="toggleModal('privacy-modal')" class="w-full bg-[#1a1a1a] hover:bg-[#005f9e] border border-white/10 text-white text-sm font-bold py-4 rounded uppercase tracking-widest transition-all">
+                    Chiudi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modali Esistenti -->
     <div id="citation-modal" class="fixed inset-0 z-[60] hidden flex justify-center items-center bg-black/80 opacity-0 transition-opacity duration-300">
         <div class="glass-panel w-full max-w-md mx-4 p-6 rounded-2xl border border-white/10 transform scale-95 transition-transform duration-300">
             <div class="flex justify-between items-center mb-4">
@@ -532,6 +615,7 @@
         </div>
     </div>
 
+    <!-- Script Base (UI e Animazioni - Non bloccato da Klaro per garantire la navigazione base) -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         lucide.createIcons();
@@ -597,20 +681,26 @@
             }
         });
 
-        const regForm = document.getElementById("registration-form");
-        const regStatus = document.getElementById("form-status");
         const regConsent = document.getElementById('privacy-consent');
         const regSubmit = document.getElementById('submit-btn');
 
         if(regConsent && regSubmit) {
             regConsent.addEventListener('change', function() { regSubmit.disabled = !this.checked; });
         }
+    </script>
+
+    <!-- Script Gestione Dati (Bloccato da Klaro! fino a consenso) -->
+    <script type="text/plain" data-type="application/javascript" data-name="formspree">
+        const regForm = document.getElementById("registration-form");
+        const regStatus = document.getElementById("form-status");
+        const regSubmitBtn = document.getElementById('submit-btn');
+        const regConsentBox = document.getElementById('privacy-consent');
 
         if(regForm && regStatus) {
             regForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                regSubmit.disabled = true;
-                regSubmit.innerHTML = 'Invio...';
+                regSubmitBtn.disabled = true;
+                regSubmitBtn.innerHTML = 'Invio...';
                 
                 const formData = new FormData(regForm);
                 if (!formData.get('Note') || formData.get('Note').trim() === '') formData.set('Note', 'Nessuna nota.');
@@ -627,22 +717,22 @@
                 } catch {
                     regStatus.innerHTML = "Si è verificato un errore. Riprova.";
                     regStatus.className = "p-4 rounded-lg bg-red-900/30 text-red-400 block font-bold text-center";
-                    regSubmit.disabled = !regConsent.checked;
+                    regSubmitBtn.disabled = !regConsentBox.checked;
                 } finally {
-                    regSubmit.innerHTML = 'Invia Richiesta Registrazione';
+                    regSubmitBtn.innerHTML = 'Invia Richiesta Registrazione';
                 }
             });
         }
 
         const fbForm = document.getElementById("feedback-form");
         const fbStatus = document.getElementById("feedback-status");
-        const fbSubmit = document.getElementById("fb-submit-btn");
+        const fbSubmitBtn = document.getElementById("fb-submit-btn");
 
         if(fbForm && fbStatus) {
             fbForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
-                fbSubmit.disabled = true;
-                fbSubmit.innerHTML = 'Invio...';
+                fbSubmitBtn.disabled = true;
+                fbSubmitBtn.innerHTML = 'Invio...';
                 
                 const formData = new FormData(fbForm);
                 
@@ -659,13 +749,11 @@
                     fbStatus.innerHTML = "Errore durante l'invio.";
                     fbStatus.className = "p-3 mt-4 rounded-lg bg-red-900/30 text-red-400 block font-bold text-center";
                 } finally {
-                    fbSubmit.disabled = false;
-                    fbSubmit.innerHTML = 'Invia Commento';
+                    fbSubmitBtn.disabled = false;
+                    fbSubmitBtn.innerHTML = 'Invia Commento';
                 }
             });
         }
     </script>
-    <!-- Script Iubenda consolidato a fine body -->
-    <script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
 </body>
 </html>
