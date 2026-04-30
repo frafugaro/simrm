@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html lang="it" class="scroll-smooth">
 <head>
+    <!-- Configurazione Override Klaro! -->
+    <script>
+        window.klaroConfig = {
+            translations: {
+                it: {
+                    consentNotice: {
+                        description: 'Il portale SIMRM utilizza protocolli di gestione dati conformi al Regolamento UE 2016/679 (GDPR). Il trattamento degli identificativi accademici è finalizzato esclusivamente alla validazione dell'accesso e alla corretta esecuzione delle sessioni di simulazione. I cookie tecnici sono indispensabili per l\'integrità della sessione operativa.'
+                    },
+                    consentModal: {
+                        title: 'Configurazione della Conformità e Integrità dei Dati',
+                        description: 'In questa sezione è possibile verificare i protocolli attivi. Il trattamento dei dati personali è vincolato alla finalità tecnica di simulazione diagnostica.'
+                    },
+                    purposes: {
+                        technical: {
+                            title: 'Servizi Tecnici Essenziali'
+                        },
+                        donations: {
+                            title: 'Supporto Esterno (Opzionale)'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
     <!-- Klaro! Consent Manager -->
     <script src="https://api.kiprotect.com/v1/privacy-managers/1311bd79570d850cfa223a8631a71cc6/klaro.js"></script>
     
@@ -111,6 +135,47 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(-100vh); visibility: hidden; z-index: -1; }
         }
+
+        /* --- OVERRIDE CSS KLARO --- */
+        .klaro {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .klaro .cookie-notice, .klaro .cookie-modal {
+            background-color: #121212 !important;
+            color: #e5e7eb !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 1rem !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+        }
+        .klaro .cm-btn.cm-btn-success, .klaro .cm-btn.cm-btn-info, .klaro .cm-btn.cm-btn-accept-all {
+            background-color: #005f9e !important;
+            color: #fff !important;
+            border: none !important;
+        }
+        .klaro .cm-btn.cm-btn-success:hover, .klaro .cm-btn.cm-btn-info:hover, .klaro .cm-btn.cm-btn-accept-all:hover {
+            background-color: #004a7c !important;
+        }
+        .klaro .cm-btn {
+            background-color: #1a1a1a !important;
+            color: #e5e7eb !important;
+            border: 1px solid #333 !important;
+        }
+        .klaro .cm-btn:hover {
+            background-color: #262626 !important;
+        }
+        .klaro .cm-switch-input:checked + .cm-switch-slider {
+            background-color: #005f9e !important;
+        }
+        .klaro a {
+            color: #00a0e3 !important;
+            text-decoration: none !important;
+        }
+        .klaro a:hover {
+            text-decoration: underline !important;
+        }
+        .klaro .cm-purpose .cm-purpose-title {
+            color: #fff !important;
+        }
     </style>
 </head>
 <body class="overflow-hidden" id="main-body">
@@ -157,6 +222,10 @@
         <div id="hamburger-dropdown" class="hidden absolute top-[70px] right-6 glass-panel p-5 rounded-xl border border-white/10 flex-col gap-4 min-w-[220px] shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50">
             <button onclick="toggleModal('contacts-modal')" class="text-left text-sm font-bold text-gray-300 hover:text-[#00a0e3] uppercase tracking-widest transition-colors flex items-center gap-3">
                 <i data-lucide="user" class="w-4 h-4"></i> Contatti
+            </button>
+            <div class="w-full h-px bg-white/10"></div>
+            <button onclick="toggleModal('donations-modal')" class="text-left text-sm font-bold text-gray-300 hover:text-[#00a0e3] uppercase tracking-widest transition-colors flex items-center gap-3">
+                <i data-lucide="heart" class="w-4 h-4"></i> Supporta il Progetto
             </button>
             <div class="w-full h-px bg-white/10"></div>
             <button onclick="toggleModal('tos-modal')" class="text-left text-sm font-bold text-gray-300 hover:text-[#00a0e3] uppercase tracking-widest transition-colors flex items-center gap-3">
@@ -572,6 +641,30 @@
                 <div>
                     <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Email di Contatto</p>
                     <a href="mailto:simrm.portal@gmail.com" class="text-base font-mono text-[#00a0e3] hover:underline">simrm.portal@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="donations-modal" class="fixed inset-0 z-[60] hidden flex justify-center items-center bg-black/80 opacity-0 transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-md mx-4 p-8 rounded-3xl border-t-4 border-[#005f9e] transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-start mb-6">
+                <div class="w-12 h-12 bg-blue-900/30 rounded-full flex items-center justify-center text-[#00a0e3]">
+                    <i data-lucide="heart" class="w-6 h-6"></i>
+                </div>
+                <button onclick="toggleModal('donations-modal')" class="focus:outline-none"><i data-lucide="x" class="w-5 h-5 text-gray-400 hover:text-white"></i></button>
+            </div>
+            <h3 class="text-2xl font-black text-white uppercase tracking-tighter mb-6 italic">Supporta il Progetto</h3>
+            
+            <div class="flex flex-col gap-6">
+                <a href="https://paypal.me/simrm" target="_blank" rel="noopener noreferrer" class="w-full bg-[#005f9e] hover:bg-[#004a7c] text-white font-bold py-4 rounded uppercase tracking-widest transition-all flex justify-center items-center gap-2 text-center">
+                    <i data-lucide="external-link" class="w-5 h-5"></i> Supporta
+                </a>
+                
+                <div class="p-4 bg-red-900/10 border border-red-900/30 rounded-lg">
+                    <p class="text-xs text-red-400/90 leading-relaxed font-mono text-justify">
+                        SIMRM è un progetto indipendente a scopo didattico. Le donazioni sono liberalità spontanee finalizzate esclusivamente alla copertura dei costi di infrastruttura. La donazione non garantisce l'accesso al simulatore, non costituisce l'acquisto di un servizio, né dà diritto a supporto tecnico prioritario o garanzie di alcun tipo.
+                    </p>
                 </div>
             </div>
         </div>
