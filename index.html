@@ -28,6 +28,9 @@
     <!-- Klaro! Consent Manager -->
     <script src="https://api.kiprotect.com/v1/privacy-managers/1311bd79570d850cfa223a8631a71cc6/klaro.js"></script>
     
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIMRM - Simulatore di Sequenze 2D e 3D</title>
@@ -453,9 +456,7 @@
                 </ul>
             </div>
             
-            <form action="https://formspree.io/f/mqewragk" method="POST" class="space-y-6" id="registration-form">
-                <input type="hidden" name="_subject" value="Nuova Richiesta Accesso SIMRM">
-                
+            <form class="space-y-6" id="registration-form">
                 <div class="grid grid-cols-2 gap-4">
                     <input type="text" name="Nome" placeholder="Nome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                     <input type="text" name="Cognome" placeholder="Cognome" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
@@ -520,7 +521,7 @@
     </footer>
 
     <!-- OVERLAYS: MODALS -->
-    <!-- Privacy Policy Modale (Nuovo) -->
+    <!-- Privacy Policy Modale -->
     <div id="privacy-modal" class="fixed inset-0 z-[70] hidden flex justify-center items-center bg-black/80 opacity-0 transition-opacity duration-300">
         <div class="glass-panel w-full max-w-3xl mx-4 p-8 rounded-3xl border-t-4 border-[#00a0e3] transform scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4 shrink-0">
@@ -743,6 +744,13 @@
         </div>
     </div>
 
+    <!-- Script Supabase Init -->
+    <script>
+        const supabaseUrl = 'https://jfjhyqomvceefgakeqke.supabase.co';
+        const supabaseKey = 'sb_publishable_ugjhQUxhnqk-e5HJojvypA_it4NrIQ6';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
+
     <!-- Script Base (UI e Animazioni - Non bloccato da Klaro per garantire la navigazione base) -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
@@ -831,20 +839,37 @@
                 regSubmitBtn.innerHTML = 'Invio...';
                 
                 const formData = new FormData(regForm);
-                if (!formData.get('Note') || formData.get('Note').trim() === '') formData.set('Note', 'Nessuna nota.');
+                const valoreNome = formData.get('Nome');
+                const valoreCognome = formData.get('Cognome');
+                const valoreEmail = formData.get('Email_Istituzionale');
+                const valoreMatricola = formData.get('Matricola');
+                const valoreIstituzione = formData.get('Università');
+                
+                const data_scadenza = new Date();
+                data_scadenza.setMonth(data_scadenza.getMonth() + 6);
                 
                 try {
-                    const r = await fetch(regForm.action, {
-                        method: 'POST', body: formData, headers: { 'Accept': 'application/json' }
-                    });
-                    if (r.ok) {
-                        regStatus.innerHTML = "Richiesta inviata con successo.";
-                        regStatus.className = "p-4 rounded-lg bg-green-900/30 text-green-400 block font-bold text-center";
-                        regForm.reset();
-                    } else throw new Error();
-                } catch {
-                    regStatus.innerHTML = "Si è verificato un errore. Riprova.";
-                    regStatus.className = "p-4 rounded-lg bg-red-900/30 text-red-400 block font-bold text-center";
+                    const { data, error } = await supabase
+                        .from('accessi_utenti')
+                        .insert([
+                            { 
+                                nome: valoreNome, 
+                                cognome: valoreCognome, 
+                                email: valoreEmail, 
+                                matricola: valoreMatricola, 
+                                istituzione: valoreIstituzione,
+                                data_scadenza: data_scadenza.toISOString()
+                            }
+                        ]);
+
+                    if (error) throw error;
+
+                    regStatus.innerHTML = "Richiesta inviata. Riceverai le credenziali d'accesso via email al termine delle verifiche accademiche.";
+                    regStatus.className = "p-4 rounded-lg bg-green-900/30 text-green-400 block font-bold text-center";
+                    regForm.reset();
+                } catch (error) {
+                    regStatus.innerHTML = "Errore durante l'invio: " + (error.message || "Riprova più tardi.");
+                    regStatus.className = "p-4 rounded-lg bg-red-900/30 text-red-400 block font-bold text-center text-xs";
                     regSubmitBtn.disabled = !regConsentBox.checked;
                 } finally {
                     regSubmitBtn.innerHTML = 'Invia Richiesta Registrazione';
