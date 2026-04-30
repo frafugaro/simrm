@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="it" class="scroll-smooth">
 <head>
+    <!-- Supabase JS (Priorità di caricamento) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <!-- Configurazione Override Klaro! -->
     <script>
         window.klaroConfig = {
@@ -28,9 +31,6 @@
     <!-- Klaro! Consent Manager -->
     <script src="https://api.kiprotect.com/v1/privacy-managers/1311bd79570d850cfa223a8631a71cc6/klaro.js"></script>
     
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIMRM - Simulatore di Sequenze 2D e 3D</title>
@@ -748,7 +748,8 @@
     <script>
         const supabaseUrl = 'https://jfjhyqomvceefgakeqke.supabase.co';
         const supabaseKey = 'sb_publishable_ugjhQUxhnqk-e5HJojvypA_it4NrIQ6';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        console.log('Client Supabase:', supabaseClient);
     </script>
 
     <!-- Script Base (UI e Animazioni - Non bloccato da Klaro per garantire la navigazione base) -->
@@ -825,7 +826,7 @@
         }
     </script>
 
-    <!-- Script Gestione Dati Supabase -->
+    <!-- Script Gestione Dati -->
     <script>
         // Algoritmo di calcolo Hash SHA-256 (Zero Knowledge Locale)
         async function digestMessage(message) {
@@ -873,7 +874,7 @@
                     let clearToken = generateRandomToken(8);
                     const tokenHash = await digestMessage(clearToken);
                     
-                    const { data, error } = await supabase
+                    const { data, error } = await supabaseClient
                         .from('accessi_utenti')
                         .insert([
                             { 
