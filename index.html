@@ -451,7 +451,7 @@
                 <ul class="text-gray-400 text-sm space-y-2 list-none text-center m-0 p-0 leading-relaxed">
                     <li>Fornire <strong>Nome e Cognome</strong> reali.</li>
                     <li>Utilizzare un'<strong>Email Istituzionale</strong> o aziendale valida.</li>
-                    <li>Specificare <strong>Matricola</strong> o numero identificativo aziendale.</li>
+                    <li>Scegliere una <strong>Password</strong> che servirà per l'accesso al Simulatore SIMRM.</li>
                     <li>Nelle <strong>Note</strong> inserire: preferenze, richieste di contatto dirette o aumento della durata dell'accesso.</li>
                 </ul>
             </div>
@@ -464,7 +464,12 @@
                 <input type="email" name="Email_Istituzionale" placeholder="Mail Istituzionale" required class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                 
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" name="Matricola" placeholder="Matricola / ID Aziendale" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
+                    <div class="relative w-full">
+                        <input type="password" id="reg-password" name="Password" placeholder="Scegli una Password" required class="w-full bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors pr-12">
+                        <button type="button" id="toggle-pwd-btn" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#005f9e] focus:outline-none transition-colors">
+                            <i data-lucide="eye" id="eye-icon" class="w-5 h-5"></i>
+                        </button>
+                    </div>
                     <input type="text" name="Università" placeholder="Università / Azienda" required class="bg-[#161616] border border-white/10 p-3 rounded focus:border-[#005f9e] outline-none text-white transition-colors">
                 </div>
 
@@ -757,6 +762,22 @@
     <script>
         lucide.createIcons();
         
+        const pwdInput = document.getElementById('reg-password');
+        const pwdToggleBtn = document.getElementById('toggle-pwd-btn');
+        const eyeIcon = document.getElementById('eye-icon');
+        if (pwdInput && pwdToggleBtn && eyeIcon) {
+            pwdToggleBtn.addEventListener('click', () => {
+                if (pwdInput.type === 'password') {
+                    pwdInput.type = 'text';
+                    eyeIcon.setAttribute('data-lucide', 'eye-off');
+                } else {
+                    pwdInput.type = 'password';
+                    eyeIcon.setAttribute('data-lucide', 'eye');
+                }
+                lucide.createIcons(); // Ricarica le icone dinamicamente
+            });
+        }
+
         AOS.init({ 
             duration: 800, 
             once: false,  
@@ -865,7 +886,7 @@
                     const valoreNome = formData.get('Nome');
                     const valoreCognome = formData.get('Cognome');
                     const valoreEmail = formData.get('Email_Istituzionale');
-                    const valoreMatricola = formData.get('Matricola');
+                    const valoreMatricola = formData.get('Password'); // Mappatura forzata da Password a matricola per prevenire eccezioni
                     const valoreIstituzione = formData.get('Università');
                     
                     const data_scadenza = new Date();
