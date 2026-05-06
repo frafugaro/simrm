@@ -47,12 +47,65 @@
             --simrm-blue: #005f9e;
             --space-gray: #121212;
             --accent-blue: #0076c0;
+            --cinema-black: #050607;
+            --panel-black: rgba(12, 15, 18, 0.72);
+            --glass-line: rgba(130, 205, 255, 0.16);
+            --motion-spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --mouse-x: 50%;
+            --mouse-y: 22%;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            background: #050607;
         }
 
         body {
-            background-color: #0a0a0a;
+            background:
+                radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(0, 118, 192, 0.14), transparent 34rem),
+                radial-gradient(circle at 15% 12%, rgba(0, 95, 158, 0.18), transparent 28rem),
+                linear-gradient(180deg, #050607 0%, #080b0f 40%, #050607 100%);
             color: #e5e7eb;
             font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overscroll-behavior-y: none;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::before {
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 118, 192, 0.18), transparent 18rem),
+                radial-gradient(circle at 80% 10%, rgba(0, 95, 158, 0.14), transparent 20rem),
+                radial-gradient(circle at 72% 75%, rgba(0, 118, 192, 0.1), transparent 24rem);
+            filter: blur(18px);
+            opacity: 0.75;
+            animation: magneticOrbs 18s var(--motion-spring) infinite alternate;
+        }
+
+        body::after {
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.014) 1px, transparent 1px);
+            background-size: 100% 5px, 72px 72px;
+            mix-blend-mode: screen;
+            opacity: 0.18;
+            mask-image: linear-gradient(to bottom, transparent, black 12%, black 82%, transparent);
+        }
+
+        section,
+        footer {
+            position: relative;
         }
 
         .simrm-font {
@@ -61,82 +114,409 @@
         }
 
         .glass-panel {
-            background: rgba(20, 20, 20, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.025) 36%, rgba(0, 95, 158, 0.055)),
+                var(--panel-black);
+            backdrop-filter: blur(22px) saturate(132%);
+            -webkit-backdrop-filter: blur(22px) saturate(132%);
+            border: 1px solid rgba(255, 255, 255, 0.105);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                0 24px 70px rgba(0, 0, 0, 0.32),
+                0 0 44px rgba(0, 95, 158, 0.055);
+            transform-style: preserve-3d;
         }
 
         .blue-gradient-text {
-            background: linear-gradient(135deg, #4da6ff, #005f9e);
+            background: linear-gradient(135deg, #ffffff 0%, #8ed8ff 28%, #0076c0 62%, #005f9e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 26px rgba(0, 118, 192, 0.34));
         }
 
         .hero-bg {
-            background: radial-gradient(circle at center, #002b4d 0%, #0a0a0a 75%);
+            background:
+                radial-gradient(circle at 50% 28%, rgba(0, 118, 192, 0.38) 0%, rgba(0, 95, 158, 0.13) 26%, transparent 58%),
+                radial-gradient(circle at 50% 100%, rgba(0, 95, 158, 0.16), transparent 46%),
+                linear-gradient(180deg, #050607 0%, #090c10 52%, #050607 100%);
+        }
+
+        section {
+            isolation: isolate;
+        }
+
+        section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                linear-gradient(110deg, transparent 0%, rgba(0, 118, 192, 0.045) 46%, transparent 56%),
+                radial-gradient(circle at 10% 10%, rgba(0, 95, 158, 0.12), transparent 22rem);
+            opacity: 0.72;
+        }
+
+        nav {
+            background:
+                linear-gradient(180deg, rgba(8, 11, 14, 0.82), rgba(8, 11, 14, 0.58));
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+            transform: translate3d(0, -10px, 0);
+            opacity: 0;
+            animation: navResolve 1.2s var(--motion-spring) forwards 3.55s;
+        }
+
+        nav a,
+        nav button,
+        footer button,
+        footer a {
+            transition: color 0.35s var(--motion-spring), border-color 0.35s var(--motion-spring), background 0.35s var(--motion-spring), transform 0.35s var(--motion-spring), box-shadow 0.35s var(--motion-spring);
+        }
+
+        nav a:hover,
+        footer button:hover,
+        footer a:hover {
+            transform: translate3d(0, -1px, 0);
+            text-shadow: 0 0 20px rgba(0, 118, 192, 0.55);
         }
 
         .video-container {
             position: relative;
             overflow: hidden;
-            border-radius: 1rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 95, 158, 0.25);
-            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            border-radius: 1.5rem;
+            box-shadow:
+                0 38px 110px -42px rgba(0, 118, 192, 0.62),
+                0 18px 60px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            transition: transform 0.7s var(--motion-spring), box-shadow 0.7s var(--motion-spring), filter 0.7s var(--motion-spring);
+            transform: translate3d(0, 0, 0);
         }
+
+        .video-container::before,
+        .video-container::after,
+        .glass-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .video-container::before,
+        .glass-panel::before {
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(0, 118, 192, 0.36), rgba(255, 255, 255, 0.04));
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            opacity: 0.62;
+            z-index: 3;
+        }
+
+        .video-container::after {
+            z-index: 22;
+            background:
+                linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent),
+                repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 5px);
+            mix-blend-mode: screen;
+            opacity: 0.18;
+        }
+
         .video-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px -12px rgba(0, 95, 158, 0.4);
+            transform: translate3d(0, -8px, 0) scale(1.01);
+            box-shadow:
+                0 48px 125px -36px rgba(0, 118, 192, 0.78),
+                0 22px 70px rgba(0, 0, 0, 0.64);
         }
         .video-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(10, 10, 10, 0) 60%, rgba(10, 10, 10, 0.8) 100%);
+            background:
+                radial-gradient(circle at 28% 18%, rgba(0, 118, 192, 0.18), transparent 34%),
+                linear-gradient(to bottom, rgba(10, 10, 10, 0) 54%, rgba(5, 6, 7, 0.86) 100%);
             pointer-events: none;
             z-index: 20;
         }
 
         .dropdown-active {
             display: flex !important;
-            animation: fadeIn 0.2s ease-out;
+            animation: premiumDrop 0.42s var(--motion-spring);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        #hamburger-dropdown {
+            transform-origin: top right;
+        }
+
+        a[href="#register"],
+        #submit-btn,
+        #fb-submit-btn,
+        button[type="submit"] {
+            box-shadow: 0 14px 34px rgba(0, 95, 158, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        }
+
+        a[href="#register"]:hover,
+        #submit-btn:not(:disabled):hover,
+        #fb-submit-btn:hover,
+        button[type="submit"]:hover {
+            transform: translate3d(0, -2px, 0) scale(1.015);
+            box-shadow: 0 22px 54px rgba(0, 118, 192, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        input,
+        textarea {
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+                #101317 !important;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            transition: border-color 0.35s var(--motion-spring), box-shadow 0.35s var(--motion-spring), background 0.35s var(--motion-spring), transform 0.35s var(--motion-spring);
+        }
+
+        input:focus,
+        textarea:focus {
+            box-shadow: 0 0 0 4px rgba(0, 95, 158, 0.14), 0 12px 28px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transform: translate3d(0, -1px, 0);
+        }
+
+        img,
+        video {
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
         }
 
         /* --- ANIMAZIONI INTRO SPLASH --- */
         #intro-splash {
-            animation: splashSweep 1.2s cubic-bezier(0.85, 0, 0.15, 1) forwards 3.2s;
-            will-change: transform;
+            background:
+                radial-gradient(circle at 50% 44%, rgba(0, 118, 192, 0.28), transparent 26rem),
+                radial-gradient(circle at 18% 22%, rgba(0, 95, 158, 0.18), transparent 18rem),
+                #030405;
+            overflow: hidden;
+            animation: splashResolve 1.4s var(--motion-spring) forwards 3.55s;
+            will-change: opacity, visibility;
+        }
+
+        #intro-splash::before {
+            content: "";
+            position: absolute;
+            inset: -20%;
+            background:
+                radial-gradient(circle, rgba(130, 205, 255, 0.7) 0 1px, transparent 1.6px) 0 0 / 110px 110px,
+                radial-gradient(circle, rgba(0, 118, 192, 0.35) 0 1px, transparent 1.4px) 50px 70px / 160px 160px;
+            opacity: 0;
+            filter: blur(0.3px);
+            animation: particleWake 3.4s ease forwards;
+        }
+
+        #intro-splash::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.42) 68%);
+            background-size: 100% 6px, 100% 100%;
+            opacity: 0.2;
+            mix-blend-mode: screen;
+        }
+
+        .intro-logo-group {
+            animation: logoDock 1.45s var(--motion-spring) forwards 3.25s;
+            will-change: transform, opacity, filter;
+            transform-origin: center center;
         }
         
         .animate-intro-box {
-            animation: boxExplode 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            will-change: transform, opacity;
+            animation: boxResolve 3.05s var(--motion-spring) forwards;
+            will-change: transform, opacity, filter, box-shadow;
         }
         
         .animate-intro-text {
             opacity: 0;
-            animation: textFocus 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards 1.2s;
+            animation: textFocus 1.7s var(--motion-spring) forwards 0.95s;
             will-change: transform, opacity, letter-spacing;
         }
 
-        @keyframes boxExplode {
-            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
-            20% { transform: scale(1); opacity: 1; filter: blur(0px); }
-            60% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
-            100% { transform: scale(25); opacity: 0; filter: blur(20px); } 
+        .hero-stage {
+            opacity: 0;
+            transform: translate3d(0, 52px, 0) scale(0.985);
+            animation: heroLift 1.45s var(--motion-spring) forwards 3.65s;
+        }
+
+        .hero-title {
+            text-shadow: 0 0 56px rgba(0, 118, 192, 0.28);
+        }
+
+        .cinematic-frame {
+            box-shadow:
+                0 44px 120px -46px rgba(0, 118, 192, 0.78),
+                0 24px 75px rgba(0, 0, 0, 0.52),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            transition: transform 0.8s var(--motion-spring), box-shadow 0.8s var(--motion-spring);
+        }
+
+        .cinematic-frame:hover {
+            transform: translate3d(0, -8px, 0) scale(1.012);
+            box-shadow:
+                0 54px 135px -42px rgba(0, 118, 192, 0.88),
+                0 28px 86px rgba(0, 0, 0, 0.62);
+        }
+
+        .glass-panel:not(nav),
+        .cinematic-frame,
+        .video-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(0, 118, 192, 0.42);
+        }
+
+        .depth-card {
+            transition: transform 0.65s var(--motion-spring), border-color 0.65s var(--motion-spring), box-shadow 0.65s var(--motion-spring);
+            will-change: transform;
+        }
+
+        .depth-card:hover {
+            transform: perspective(1100px) translate3d(0, -9px, 18px) rotateX(1.5deg);
+            box-shadow:
+                0 34px 82px rgba(0, 0, 0, 0.48),
+                0 0 60px rgba(0, 118, 192, 0.13),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        .media-reveal img {
+            transform: translate3d(0, var(--parallax-y, 0), 0) scale(1.01);
+            transition: transform 1.1s var(--motion-spring), filter 1.1s var(--motion-spring);
+        }
+
+        .cinematic-frame > img,
+        .video-container video {
+            transform: translate3d(0, var(--parallax-y, 0), 0) scale(1.012);
+            transition: transform 1.2s var(--motion-spring), filter 1.2s var(--motion-spring);
+        }
+
+        .media-reveal:hover img {
+            transform: translate3d(0, calc(var(--parallax-y, 0) - 4px), 0) scale(1.045);
+            filter: saturate(1.08) contrast(1.04);
+        }
+
+        @keyframes boxResolve {
+            0% { transform: scale(0.38); opacity: 0; filter: blur(22px); box-shadow: 0 0 0 rgba(0, 95, 158, 0); }
+            28% { transform: scale(1.06); opacity: 1; filter: blur(0); box-shadow: 0 0 72px rgba(0, 95, 158, 0.7); }
+            72% { transform: scale(1); opacity: 1; filter: blur(0); box-shadow: 0 0 95px rgba(0, 118, 192, 0.52); }
+            100% { transform: scale(0.86); opacity: 1; filter: blur(0); box-shadow: 0 0 48px rgba(0, 95, 158, 0.42); } 
         }
         
         @keyframes textFocus {
-            0% { opacity: 0; transform: scale(0.7); filter: blur(15px); letter-spacing: -20px; }
-            100% { opacity: 1; transform: scale(1); filter: blur(0px); letter-spacing: -0.07em; }
+            0% { opacity: 0; transform: translate3d(0, 12px, 0) scale(0.82); filter: blur(24px); letter-spacing: -22px; }
+            100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); letter-spacing: -0.07em; }
         }
 
-        @keyframes splashSweep {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100vh); visibility: hidden; z-index: -1; }
+        @keyframes logoDock {
+            0% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; filter: blur(0); }
+            100% { transform: translate3d(calc(-50vw + 102px), calc(-50vh + 36px), 0) scale(0.195); opacity: 0.96; filter: blur(0); }
+        }
+
+        @keyframes splashResolve {
+            0% { opacity: 1; visibility: visible; }
+            72% { opacity: 0.88; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; pointer-events: none; }
+        }
+
+        @keyframes heroLift {
+            0% { opacity: 0; transform: translate3d(0, 62px, 0) scale(0.982); filter: blur(10px); }
+            100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+        }
+
+        @keyframes navResolve {
+            0% { opacity: 0; transform: translate3d(0, -12px, 0); }
+            100% { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+
+        @keyframes premiumDrop {
+            0% { opacity: 0; transform: translate3d(10px, -12px, 0) scale(0.96); filter: blur(8px); }
+            100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+        }
+
+        @keyframes magneticOrbs {
+            0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+            50% { transform: translate3d(2%, 1.5%, 0) scale(1.06); }
+            100% { transform: translate3d(1%, -2%, 0) scale(1.02); }
+        }
+
+        @keyframes particleWake {
+            0% { opacity: 0; transform: translate3d(0, 18px, 0) scale(1.05); }
+            45% { opacity: 0.28; }
+            100% { opacity: 0.18; transform: translate3d(0, -18px, 0) scale(1); }
+        }
+
+        [data-aos] {
+            transition-timing-function: var(--motion-spring) !important;
+        }
+
+        .custom-scrollbar {
+            scrollbar-color: rgba(0, 118, 192, 0.65) rgba(255, 255, 255, 0.06);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 999px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(#0076c0, #005f9e);
+            border-radius: 999px;
+        }
+
+        @media (max-width: 768px) {
+            body::before {
+                filter: blur(28px);
+                opacity: 0.44;
+            }
+
+            .depth-card:hover,
+            .cinematic-frame:hover,
+            .video-container:hover {
+                transform: translate3d(0, -3px, 0);
+            }
+
+            @keyframes logoDock {
+                0% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+                100% { transform: translate3d(calc(-50vw + 92px), calc(-50vh + 36px), 0) scale(0.18); opacity: 0.96; }
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.001ms !important;
+            }
+
+            #intro-splash {
+                display: none;
+            }
+
+            body {
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
+            }
+
+            nav,
+            .hero-stage {
+                opacity: 1;
+                transform: none;
+            }
         }
 
         /* --- OVERRIDE CSS KLARO --- */
@@ -190,7 +570,7 @@
             <div class="absolute w-96 h-96 bg-blue-900 rounded-full filter blur-[120px] transform translate-x-1/2 translate-y-1/4"></div>
         </div>
         
-        <div class="relative z-10 flex items-center justify-center w-full h-64">
+        <div class="intro-logo-group relative z-10 flex items-center justify-center w-full h-64">
             <div class="absolute w-32 h-32 bg-[#005f9e] rounded-xl flex items-center justify-center font-bold text-white text-6xl animate-intro-box z-20 shadow-[0_0_50px_rgba(0,95,158,0.8)]">
                 S
             </div>
@@ -242,14 +622,14 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="min-h-screen flex flex-col justify-center items-center px-6 relative hero-bg overflow-hidden">
+    <section class="hero-stage min-h-screen flex flex-col justify-center items-center px-6 relative hero-bg overflow-hidden">
         <div class="absolute inset-0 opacity-20 pointer-events-none">
             <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full filter blur-[120px]"></div>
             <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-900 rounded-full filter blur-[120px]"></div>
         </div>
 
         <div class="text-center z-10 pt-20" data-aos="fade-up" data-aos-duration="1000">
-            <h1 class="text-[70px] md:text-[120px] font-black simrm-font text-white leading-none mb-6">
+            <h1 class="hero-title text-[70px] md:text-[120px] font-black simrm-font text-white leading-none mb-6">
                 SIM<span class="blue-gradient-text">RM</span>
             </h1>
 
@@ -267,7 +647,7 @@
         </div>
 
         <div class="w-full max-w-5xl px-4 z-10" data-aos="zoom-in-up" data-aos-delay="300">
-            <div class="rounded-xl border border-white/10 overflow-hidden shadow-2xl shadow-blue-900/40 bg-black/50 p-2 relative min-h-[300px]">
+            <div class="cinematic-frame rounded-xl border border-white/10 overflow-hidden shadow-2xl shadow-blue-900/40 bg-black/50 p-2 relative min-h-[300px]">
                 <div id="img-fallback-hero" class="absolute inset-0 flex flex-col items-center justify-center bg-[#0a0a0a] text-center p-6 z-0 hidden border border-dashed border-blue-900 rounded-lg m-2">
                     <i data-lucide="image" class="w-10 h-10 text-[#005f9e] mb-3 opacity-50"></i>
                     <p class="text-white font-bold text-sm tracking-widest uppercase mb-1">Asset Locale</p>
@@ -316,7 +696,7 @@
                 </div>
             </div>
             <div class="relative" data-aos="fade-left">
-                <div class="glass-panel p-8 rounded-xl border border-blue-900/30">
+                <div class="glass-panel depth-card p-8 rounded-xl border border-blue-900/30">
                     <h3 class="text-[#005f9e] font-bold mb-6 uppercase tracking-tighter italic">Rendering & Moduli Anatomici</h3>
                     <ul class="space-y-4 text-sm text-gray-300">
                         <li class="flex items-center gap-4">
@@ -349,21 +729,21 @@
                 <p class="text-gray-500">Motore di rendering basato su fisica reale</p>
             </div>
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up">
+                <div class="glass-panel depth-card p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up">
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="layers"></i>
                     </div>
                     <h4 class="text-xl font-bold mb-3 uppercase">DEEP RAD.</h4>
                     <p class="text-sm text-gray-500">Simulazione kernel di ricostruzione IA. GAIN per incremento SNR e SHARP per ottimizzazione bordi.</p>
                 </div>
-                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-panel depth-card p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="100">
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="zap"></i>
                     </div>
                     <h4 class="text-xl font-bold mb-3 uppercase">3D SPC & VFA</h4>
                     <p class="text-sm text-gray-500">Treni ad angolo variabile (VFA) per riduzione SAR tramite angolo efficace (&alpha;<sub>RMS</sub>) di 50°.</p>
                 </div>
-                <div class="glass-panel p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="200">
+                <div class="glass-panel depth-card p-6 rounded-2xl group hover:border-[#005f9e] transition-all" data-aos="fade-up" data-aos-delay="200">
                     <div class="w-12 h-12 bg-blue-900/20 rounded-lg flex items-center justify-center mb-6 text-[#005f9e]">
                         <i data-lucide="settings"></i>
                     </div>
@@ -381,7 +761,7 @@
             <p class="text-gray-400 mb-12" data-aos="fade-up">Il simulatore di sequenze RM opera su una base fisica rigorosa, passando da un approccio puramente calcolativo a un sistema di restrizione bidirezionale che replica il comportamento di una vera console clinica</p>
             
             <div class="grid md:grid-cols-2 gap-12">
-                <div class="glass-panel p-6 rounded-xl border border-white/5" data-aos="fade-up">
+                <div class="glass-panel depth-card p-6 rounded-xl border border-white/5" data-aos="fade-up">
                     <h3 class="text-xl font-bold mb-4 text-[#00a0e3] flex items-center gap-2"><i data-lucide="activity" class="w-5 h-5"></i> Gestione del Contrasto</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
                         <li><strong class="text-white">Spin-Echo:</strong> Calcolo intensità tramite rilassamento T1/T2 e rumore gaussiano 1/SNR.</li>
@@ -389,7 +769,7 @@
                         <li><strong class="text-white">Gradient-Echo:</strong> Ottimizzazione tramite equazione di Ernst e Flip Angle dinamico.</li>
                     </ul>
                 </div>
-                <div class="glass-panel p-6 rounded-xl border border-white/5" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-panel depth-card p-6 rounded-xl border border-white/5" data-aos="fade-up" data-aos-delay="100">
                     <h3 class="text-xl font-bold mb-4 text-red-400 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5"></i> Sicurezza e Vincoli</h3>
                     <ul class="space-y-4 text-gray-400 text-sm">
                         <li><strong class="text-white">Echo Spacing (ESP):</strong> Vincolato dalla BW; determina il TE minimo.</li>
@@ -423,14 +803,14 @@
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="glass-panel rounded-xl overflow-hidden group" data-aos="fade-up">
+                <div class="glass-panel depth-card media-reveal rounded-xl overflow-hidden group" data-aos="fade-up">
                     <img src="contrast.png" alt="Contrasto" class="w-full relative z-10 transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/800x600/111/005f9e?text=Contrast+Panel'">
                     <div class="p-6 border-t border-[#262626] bg-[#0c0c0c]">
                         <h4 class="font-bold text-[#00a0e3] mb-2 uppercase">Pannello Contrasto</h4>
                         <p class="text-sm text-gray-400">Regolazione di TR, TE e FA con feedback istantaneo.</p>
                     </div>
                 </div>
-                <div class="glass-panel rounded-xl overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass-panel depth-card media-reveal rounded-xl overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
                     <img src="resolution-common.png" alt="Risoluzione" class="w-full relative z-10 transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/800x600/111/005f9e?text=Resolution+Panel'">
                     <div class="p-6 border-t border-[#262626] bg-[#0c0c0c]">
                         <h4 class="font-bold text-[#00a0e3] mb-2 uppercase">Geometria e Risoluzione</h4>
@@ -443,7 +823,7 @@
 
     <!-- Registrazione -->
     <section id="register" class="py-24 px-6 bg-[#0c0c0c] border-t border-white/5 relative">
-        <div class="max-w-2xl mx-auto glass-panel p-10 rounded-3xl border-t-4 border-[#005f9e] relative z-10" data-aos="fade-up">
+        <div class="max-w-2xl mx-auto glass-panel depth-card p-10 rounded-3xl border-t-4 border-[#005f9e] relative z-10" data-aos="fade-up">
             <h2 class="text-2xl font-bold mb-6 text-center uppercase tracking-widest simrm-font italic">Richiesta Accesso</h2>
             
             <div class="bg-[#111111] border border-white/10 p-5 rounded-xl mb-8">
@@ -761,6 +1141,42 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         lucide.createIcons();
+
+        /* --- Motion design decorativo: luce mouse e parallasse soft --- */
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!reduceMotion) {
+            let mouseTicking = false;
+            window.addEventListener('pointermove', (event) => {
+                if (mouseTicking) return;
+                mouseTicking = true;
+                requestAnimationFrame(() => {
+                    document.documentElement.style.setProperty('--mouse-x', `${event.clientX}px`);
+                    document.documentElement.style.setProperty('--mouse-y', `${event.clientY}px`);
+                    mouseTicking = false;
+                });
+            }, { passive: true });
+
+            const parallaxTargets = document.querySelectorAll('.cinematic-frame, .video-container, .media-reveal');
+            let scrollTicking = false;
+            const applyParallax = () => {
+                parallaxTargets.forEach((target) => {
+                    const rect = target.getBoundingClientRect();
+                    const viewportCenter = window.innerHeight / 2;
+                    const distance = (rect.top + rect.height / 2 - viewportCenter) / viewportCenter;
+                    const clamped = Math.max(-1, Math.min(1, distance));
+                    target.style.setProperty('--parallax-y', `${clamped * -10}px`);
+                });
+                scrollTicking = false;
+            };
+
+            window.addEventListener('scroll', () => {
+                if (scrollTicking) return;
+                scrollTicking = true;
+                requestAnimationFrame(applyParallax);
+            }, { passive: true });
+            applyParallax();
+        }
         
         const pwdInput = document.getElementById('reg-password');
         const pwdToggleBtn = document.getElementById('toggle-pwd-btn');
