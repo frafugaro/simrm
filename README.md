@@ -15,10 +15,26 @@ Il portale si interfaccia con un'infrastruttura modulare così definita:
 
 ## Avvertenze e Limiti di Utilizzo
 L'applicativo e il simulatore annesso hanno **scopi esclusivamente didattici**. 
-Il sistema non è un dispositivo medico e i dati in output derivano esclusivamente da simulazioni algoritmiche su fantocci tecnico/anatomici (modelli vettoriali/matriciali)[cite: 5.7]. È severamente vietato l'utilizzo di questa piattaforma per scopi diagnostici, clinici o per la pianificazione di esami su pazienti reali.
+Il sistema non è un dispositivo medico e i dati in output derivano esclusivamente da simulazioni algoritmiche su fantocci tecnico/anatomici (modelli vettoriali/matriciali). È severamente vietato l'utilizzo di questa piattaforma per scopi diagnostici, clinici o per la pianificazione di esami su pazienti reali.
 
-## Setup Locale e Configurazione
-*(Sezione da completare: inserire specifiche per l'inizializzazione dell'ambiente, le dipendenze e i comandi di avvio).*
+## Struttura del Repository e Note per gli Sviluppatori
+
+> **Nota importante:** Questo repository **non contiene** il codice sorgente del simulatore RM (algoritmi, calcoli delle equazioni di Bloch o interfaccia di simulazione). 
+
+Questo progetto ospita esclusivamente il **portale di presentazione e richiesta accessi**: una landing page informativa con il sistema di autenticazione e gestione delle credenziali per gli utenti.
+
+### Caratteristiche del repository
+- Contiene l'interfaccia di presentazione delle funzionalità di SIMRM.
+- Gestisce il form di richiesta credenziali e l'interfaccia di login/registrazione.
+- Il motore di simulazione effettivo risiede in un repository privato separato ed è erogato su un dominio dedicato ([simulatorerm.vercel.app](https://simulatorerm.vercel.app/)).
+
+Di conseguenza, il clonato di questo repository è utile solo se si desidera analizzare o contribuire alla gestione del portale web di richiesta accessi e alle sue integrazioni di autenticazione.
+
+## Contatti e Contributi
+
+Se desideri contribuire al miglioramento del portale, segnalare un problema o proporre suggerimenti e consigli sul progetto, puoi inviare un'e-mail a:
+
+📧 **simrm.portal@gmail.com**
 
 ---
 **Sviluppo:** Francesco Fugaro | © 2024-2026 SIMRM Project
