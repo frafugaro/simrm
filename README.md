@@ -1,7 +1,7 @@
 # SIMRM Portal
 
 ## Panoramica
-**SIMRM Portal** è il portale web dedicato alla richiesta di accesso e alla registrazione per il simulatore didattico SIMRM (Simulatore didattico di sequenze RM 2D e 3D). Il sistema gestisce l'autenticazione degli operatori e l'autorizzazione per accedere all'ambiente interattivo di simulazione delle sequenze RM (es. TSE, SPACE, GRE)[cite: 5.6].
+**SIMRM Portal** è il portale web dedicato alla richiesta di accesso e alla registrazione per il simulatore didattico SIMRM (Simulatore didattico di sequenze RM 2D e 3D). Il sistema gestisce l'autenticazione degli operatori e l'autorizzazione per accedere all'ambiente interattivo di simulazione delle sequenze RM (es. TSE, SPACE, GRE).
 
 ## Riferimenti Operativi
 - **Portale Registrazione:** [simrmportal.vercel.app](https://simrmportal.vercel.app)
@@ -11,7 +11,7 @@
 Il portale si interfaccia con un'infrastruttura modulare così definita:
 - **Autenticazione e Sicurezza:** Gestione accessi e privacy/cookie manager basati su Supabase. Le password generate hanno validità temporale limitata (6 mesi).
 - **Motore di Simulazione (Endpoint):** Backend sviluppato in FastAPI con moduli fisici separati per la validazione dei limiti (TR/TE/SAR) e il calcolo delle equazioni di Bloch (TA, SNR, SAR, ESP, BW).
-- **Deployment:** Vercel[cite: 5.2].
+- **Deployment:** Vercel.
 
 ## Avvertenze e Limiti di Utilizzo
 L'applicativo e il simulatore annesso hanno **scopi esclusivamente didattici**. 
